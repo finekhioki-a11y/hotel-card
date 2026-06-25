@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hotel Members Card</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            background-color: #0a0a0a; /* 背景を黒にしてカードを目立たせる */
+            color: #fff;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            /* 画面のピンチズーム（拡大・縮小）を禁止してアプリ感を出す */
+            touch-action: manipulation;
+        }
+
+        /* 会員カードの土台（ここに画像が表示されます） */
+        .card-container {
+            width: 330px;
+            height: 208px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 0.8s ease; /* 画像が切り替わるときのアニメーション */
+        }
+
+        /* 会員情報（名前・番号・ポイント）を画像の上に重ねて表示するエリア */
+        .info-overlay {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            font-size: 13px;
+            font-family: monospace;
+            opacity: 0.9;
+            pointer-events: none; /* タップイベントを邪魔しない */
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8); /* 画像の色が白っぽくても文字が読めるように影を付与 */
+        }
+        .points-display { font-size: 18px; font-weight: bold; margin-top: 5px; }
+
+        /* 【重要】カードの右下に配置する、隠しタップ用の完全に透明なボタン */
+        .secret-trigger {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            z-index: 10; /* 一番手前に配置 */
+        }
+
+        /* スタッフ専用メニュー（普段は非表示） */
+        .staff-section {
+            display: none; /* 最初は隠しておく */
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px dashed #555;
+            border-radius: 10px;
+            text-align: center;
+            background-color: #1a1a1a;
+            width: 330px;
+            box-sizing: border-box;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .staff-title { font-size: 12px; color: #aaa; margin-bottom: 10px; font-weight: bold; }
+        
+        /* スタッフ用ボタンの見た目 */
+        button {
+            background-color: #fff;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 15px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        button:active { transform: scale(0.95); }
+        .rest-btn { background-color: #e67e22; color: #fff; }
+        .other-btn { background-color: #3498db; color: #fff; }
+        .stay-btn { background-color: #2ecc71; color: #fff; }
+        .close-btn { background-color: #444; color: #fff; font-size: 11px; padding: 5px 10px; margin-top: 15px; }
+        .reset-btn { background-color: #ff4444; color: white; font-size: 11px; padding: 5px 10px; margin-top: 15px;}
+    </style>
+</head>
+<body>
+
+    <div id="card" class="card-container">
+        
+        <div class="info-overlay">
+            <div>Member: GUEST USER</div>
+            <div>No: 2026-8871</div>
+            <div class="points-display">SCORE: <span id="pt-count">0</span> pt</div>
+        </div>
+        
+        <div class="secret-trigger" onclick="handleSecretClick()"></div>
+    </div>
+
+    <div id="staff-panel" class="staff-section">
+        <div class="staff-title">【スタッフ専用メニュー】</div>
+        <button class="rest-btn" onclick="processStay('休憩')">休憩 (1pt)</button>
+        <button class="other-btn" onclick="processStay('その他休憩')">その他休憩 (1pt)</button>
+        <button class="stay-btn" onclick="processStay('宿泊')">宿泊 (2pt※)</button>
+        <br>
+        <button class="close-btn" onclick="closePanel()">メニューを閉じる</button>
+        <br>
+        <button class="reset-btn" onclick="resetPoint()">データを初期化</button>
+    </div>
+
+    <script>
+        // 【設定】スタッフ用の4桁の暗証番号
+        const STAFF_PIN = "7777"; 
+
+        // 【設定】各ランクに必要な合計ポイント（シルバー:10pt、ゴールド:30pt、プラチナ:60pt）
+        const RANK_THRESHOLDS = { silver: 10, gold: 30, platinum: 60 }; 
+
+        // スマホに保存されているポイントを読み込み（データがなければ0からスタート）
+        let points = parseInt(localStorage.getItem('hotel_points')) || 0;
+        let currentRank = 'bronze';
+        
+        // 3回タップ判定用の変数
+        let clickCount = 0;
+        let clickTimer = null;
+
+        // ポイントに応じて、用意した4枚の背景画像を自動で切り替える関数
+        function updateUI() {
+            document.getElementById('pt-count').innerText = points;
+            const card = document.getElementById('card');
+            
+            if (points >= RANK_THRESHOLDS.platinum) {
+                currentRank = 'platinum';
+                card.style.backgroundImage = "url('platinum.png')";
+            } else if (points >= RANK_THRESHOLDS.gold) {
+                currentRank = 'gold';
+                card.style.backgroundImage = "url('gold.png')";
+            } else if (points >= RANK_THRESHOLDS.silver) {
+                currentRank = 'silver';
+                card.style.backgroundImage = "url('silver.png')";
+            } else {
+                currentRank = 'bronze';
+                card.style.backgroundImage = "url('bronze.png')";
+            }
+        }
+
+        // カードの右下をタップした時の処理（0.8秒以内に3回連続タップでメニューを表示）
+        function handleSecretClick() {
+            clickCount++;
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => { clickCount = 0; }, 800); 
+
+            if (clickCount === 3) {
+                clickCount = 0;
+                document.getElementById('staff-panel').style.display = 'block'; // スタッフメニューを表示
+                window.scrollTo(0, document.body.scrollHeight); // 画面を少し下にスクロール
+            }
+        }
+
+        // メニューを閉じる関数
+        function closePanel() { 
+            document.getElementById('staff-panel').style.display = 'none'; 
+        }
+
+        // スタッフがポイントを付与する時のロジック
+        function processStay(type) {
+            const pin = prompt(`【スタッフ確認】暗証番号を入力してください\n(${type}の処理)`);
+            if (pin !== STAFF_PIN) { 
+                alert("暗証番号が正しくありません。"); 
+                return; 
+            }
+
+            let addAmount = 0;
+            if (currentRank === 'bronze') { 
+                // ブロンズの時は一律で1ポイント
+                addAmount = 1; 
+            } else { 
+                // シルバー以上の時は、宿泊なら2ポイント、それ以外（休憩・その他休憩）は1ポイント
+                addAmount = (type === '宿泊') ? 2 : 1; 
+            }
+
+            points += addAmount;
+            localStorage.setItem('hotel_points', points); // スマホ（ブラウザ）にデータを永久保存
+            updateUI(); // 画面（画像やポイント数）を更新
+            closePanel(); // メニューを自動で隠す
+            
+            alert(`【処理完了】\n+${addAmount}pt を付与しました。`);
+        }
+
+        // データをゼロにリセットする関数
+        function resetPoint() {
+            const pin = prompt("【スタッフ確認】初期化コードを入力してください");
+            if (pin === STAFF_PIN) {
+                if(confirm('全てのポイントをリセットしますか？')) {
+                    points = 0;
+                    localStorage.setItem('hotel_points', points);
+                    updateUI();
+                    closePanel();
+                    alert('初期化しました。');
+                }
+            } else { alert("暗証番号が違います。"); }
+        }
+
+        // 起動時に一番最初の画面を表示する
+        updateUI();
+    </script>
+</body>
+</html>
