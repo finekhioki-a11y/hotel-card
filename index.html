@@ -36,11 +36,11 @@
             transition: background-image 0.8s ease; /* 画像が切り替わるときのアニメーション */
         }
 
-        /* 【変更箇所】会員情報の上に重ねる黒い半透明の座布団 */
+        /* 【変更箇所】会員情報を「右上」に配置し、黒い半透明の座布団を敷く */
         .info-overlay {
             position: absolute;
-            left: 15px;
-            bottom: 15px;
+            right: 15px; /* 右からの距離 */
+            top: 15px;   /* 上からの距離 */
             font-size: 12px;
             font-family: monospace;
             pointer-events: none; /* タップイベントを邪魔しない */
@@ -51,7 +51,7 @@
             padding: 10px 15px;
             /* 四隅を少し丸くする */
             border-radius: 8px;
-            /* 枠線をほんのり白く浮かび上がらせる（おしゃれ度アップ） */
+            /* 枠線をほんのり白く浮かび上がらせる */
             border: 1px solid rgba(255, 255, 255, 0.15);
             /* 文字が潰れないように最小の横幅を固定 */
             min-width: 160px;
@@ -123,108 +123,4 @@
     <div id="staff-panel" class="staff-section">
         <div class="staff-title">【スタッフ専用メニュー】</div>
         <button class="rest-btn" onclick="processStay('休憩')">休憩 (1pt)</button>
-        <button class="other-btn" onclick="processStay('その他休憩')">その他休憩 (1pt)</button>
-        <button class="stay-btn" onclick="processStay('宿泊')">宿泊 (2pt※)</button>
-        <br>
-        <button class="close-btn" onclick="closePanel()">メニューを閉じる</button>
-        <br>
-        <button class="reset-btn" onclick="resetPoint()">データを初期化</button>
-    </div>
-
-    <script>
-        // 【設定】スタッフ用の4桁の暗証番号
-        const STAFF_PIN = "7777"; 
-
-        // 【設定】各ランクに必要な合計ポイント（シルバー:10pt、ゴールド:30pt、プラチナ:60pt）
-        const RANK_THRESHOLDS = { silver: 10, gold: 30, platinum: 60 }; 
-
-        // スマホに保存されているポイントを読み込み（データがなければ0からスタート）
-        let points = parseInt(localStorage.getItem('hotel_points')) || 0;
-        let currentRank = 'bronze';
-        
-        // 3回タップ判定用の変数
-        let clickCount = 0;
-        let clickTimer = null;
-
-        // ポイントに応じて、用意した4枚の背景画像を自動で切り替える関数
-        function updateUI() {
-            document.getElementById('pt-count').innerText = points;
-            const card = document.getElementById('card');
-            
-            if (points >= RANK_THRESHOLDS.platinum) {
-                currentRank = 'platinum';
-                card.style.backgroundImage = "url('platinum.png')";
-            } else if (points >= RANK_THRESHOLDS.gold) {
-                currentRank = 'gold';
-                card.style.backgroundImage = "url('gold.png')";
-            } else if (points >= RANK_THRESHOLDS.silver) {
-                currentRank = 'silver';
-                card.style.backgroundImage = "url('silver.png')";
-            } else {
-                currentRank = 'bronze';
-                card.style.backgroundImage = "url('bronze.png')";
-            }
-        }
-
-        // カードの右下をタップした時の処理（0.8秒以内に3回連続タップでメニューを表示）
-        function handleSecretClick() {
-            clickCount++;
-            clearTimeout(clickTimer);
-            clickTimer = setTimeout(() => { clickCount = 0; }, 800); 
-
-            if (clickCount === 3) {
-                clickCount = 0;
-                document.getElementById('staff-panel').style.display = 'block'; // スタッフメニューを表示
-                window.scrollTo(0, document.body.scrollHeight); // 画面を少し下にスクロール
-            }
-        }
-
-        // メニューを閉じる関数
-        function closePanel() { 
-            document.getElementById('staff-panel').style.display = 'none'; 
-        }
-
-        // スタッフがポイントを付与する時のロジック
-        function processStay(type) {
-            const pin = prompt(`【スタッフ確認】暗証番号を入力してください\n(${type}の処理)`);
-            if (pin !== STAFF_PIN) { 
-                alert("暗証番号が正しくありません。"); 
-                return; 
-            }
-
-            let addAmount = 0;
-            if (currentRank === 'bronze') { 
-                // ブロンズの時は一律で1ポイント
-                addAmount = 1; 
-            } else { 
-                // シルバー以上の時は、宿泊なら2ポイント、それ以外（休憩・その他休憩）は1ポイント
-                addAmount = (type === '宿泊') ? 2 : 1; 
-            }
-
-            points += addAmount;
-            localStorage.setItem('hotel_points', points); // スマホ（ブラウザ）にデータを永久保存
-            updateUI(); // 画面（画像やポイント数）を更新
-            closePanel(); // メニューを自動で隠す
-            
-            alert(`【処理完了】\n+${addAmount}pt を付与しました。`);
-        }
-
-        // データをゼロにリセットする関数
-        function resetPoint() {
-            const pin = prompt("【スタッフ確認】初期化コードを入力してください");
-            if (pin === STAFF_PIN) {
-                if(confirm('全てのポイントをリセットしますか？')) {
-                    points = 0;
-                    localStorage.setItem('hotel_points', points);
-                    updateUI();
-                    closePanel();
-                    alert('初期化しました。');
-                }
-            } else { alert("暗証番号が違います。"); }
-        }
-
-        // 起動時に一番最初の画面を表示する
-        updateUI();
-    </script>
-</body>
-</html>
+        <button class="other-btn" onclick="processStay('その他休憩')">
