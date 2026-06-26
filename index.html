@@ -36,18 +36,27 @@
             transition: background-image 0.8s ease; /* 画像が切り替わるときのアニメーション */
         }
 
-        /* 会員情報（名前・番号・ポイント）を画像の上に重ねて表示するエリア */
+        /* 【変更箇所】会員情報の上に重ねる黒い半透明の座布団 */
         .info-overlay {
             position: absolute;
-            left: 20px;
-            bottom: 20px;
-            font-size: 13px;
+            left: 15px;
+            bottom: 15px;
+            font-size: 12px;
             font-family: monospace;
-            opacity: 0.9;
             pointer-events: none; /* タップイベントを邪魔しない */
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8); /* 画像の色が白っぽくても文字が読めるように影を付与 */
+            
+            /* 背景に黒い半透明（薄い黒）を敷く設定 */
+            background-color: rgba(0, 0, 0, 0.55); 
+            /* 少し内側に余白（パディング）を作る */
+            padding: 10px 15px;
+            /* 四隅を少し丸くする */
+            border-radius: 8px;
+            /* 枠線をほんのり白く浮かび上がらせる（おしゃれ度アップ） */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            /* 文字が潰れないように最小の横幅を固定 */
+            min-width: 160px;
         }
-        .points-display { font-size: 18px; font-weight: bold; margin-top: 5px; }
+        .points-display { font-size: 16px; font-weight: bold; margin-top: 4px; color: #fff; }
 
         /* 【重要】カードの右下に配置する、隠しタップ用の完全に透明なボタン */
         .secret-trigger {
