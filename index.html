@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hotel Members Card</title>
-    <link rel="manifest" href="manifest.json?v=2">
+    <link rel="manifest" href="manifest.json?v=4">
     <style>
         body {
-            background-color: #0a0a0a; /* 背景を黒にしてカードを目立たせる */
+            background-color: #0d0d0d; /* さらに深い黒にして高級感を演出 */
             color: #fff;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial, 'Noto Sans JP', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -17,48 +17,90 @@
             min-height: 100vh;
             margin: 0;
             overflow: hidden;
-            /* 画面のピンチズーム（拡大・縮小）を禁止してアプリ感を出す */
             touch-action: manipulation;
         }
 
-        /* 会員カードの土台（ここに画像が表示されます） */
+        /* 会員カードの土台 */
         .card-container {
             width: 330px;
             height: 208px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border-radius: 16px; /* 少しだけ丸みを強めてモダンに */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.1);
             position: relative;
             overflow: hidden;
             box-sizing: border-box;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            transition: background-image 0.8s ease; /* 画像が切り替わるときのアニメーション */
+            transition: background-image 0.8s ease;
         }
 
-        /* 会員情報を「右上」に配置し、黒い半透明の座布団を敷く */
+        /* 【新デザイン】すりガラス風（グラスモーフィズム）の洗練されたインフォメーションエリア */
         .info-overlay {
             position: absolute;
-            right: 15px; /* 右からの距離 */
-            top: 15px;   /* 上からの距離 */
-            font-size: 12px;
-            font-family: monospace;
-            pointer-events: none; /* タップイベントを邪魔しない */
+            right: 16px;
+            top: 16px;
+            pointer-events: none;
             
-            /* 背景に黒い半透明（薄い黒）を敷く設定 */
-            background-color: rgba(0, 0, 0, 0.55); 
-            /* 少し内側に余白（パディング）を作る */
-            padding: 10px 15px;
-            /* 四隅を少し丸くする */
-            border-radius: 8px;
-            /* 枠線をほんのり白く浮かび上がらせる */
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            /* 文字が潰れないように最小の横幅を固定 */
-            min-width: 160px;
+            /* 背景を半透明にして、ぼかしエフェクト（すりガラス効果）を適用 */
+            background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            
+            padding: 12px 16px;
+            border-radius: 12px;
+            /* 枠線を極細の半透明白にしてシャープな印象に */
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            min-width: 150px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-        .points-display { font-size: 16px; font-weight: bold; margin-top: 4px; color: #fff; }
 
-        /* 【重要】カードの右下に配置する、隠しタップ用の完全に透明なボタン */
+        /* ゲスト情報：小さくスタイリッシュに */
+        .member-info {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6); /* 文字色を少し薄くして主役を譲る */
+            margin-bottom: 2px;
+            font-family: monospace;
+        }
+
+        /* 【主役】ポイントカウントの新しい高級デザイン */
+        .points-container {
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        /* 「POINT」のラベル文字 */
+        .points-label {
+            font-size: 9px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            color: #d4af37; /* 高級感のあるゴールド（金）をアクセントに */
+            text-transform: uppercase;
+            margin-bottom: -2px;
+        }
+
+        /* 数字部分：大胆に大きく、美しく */
+        .points-display { 
+            font-size: 32px; /* 数字を圧倒的主役に */
+            font-weight: 200; /* あえて少し細めにすることで洗練されたハイブランド感を出します */
+            color: #ffffff; 
+            line-height: 1;
+            letter-spacing: -0.5px;
+        }
+        
+        /* 単位（pt） */
+        .points-unit {
+            font-size: 14px;
+            font-weight: 400;
+            margin-left: 2px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* 隠しタップエリア（カード右下） */
         .secret-trigger {
             position: absolute;
             right: 0;
@@ -66,45 +108,46 @@
             width: 80px;
             height: 80px;
             cursor: pointer;
-            z-index: 10; /* 一番手前に配置 */
+            z-index: 10;
         }
 
-        /* スタッフ専用メニュー（普段は非表示） */
+        /* スタッフ専用メニュー */
         .staff-section {
-            display: none; /* 最初は隠しておく */
+            display: none;
             margin-top: 25px;
-            padding: 15px;
-            border: 1px dashed #555;
-            border-radius: 10px;
+            padding: 20px;
+            border: 1px dashed rgba(255,255,255,0.15);
+            border-radius: 12px;
             text-align: center;
-            background-color: #1a1a1a;
+            background-color: #161616;
             width: 330px;
             box-sizing: border-box;
             animation: fadeIn 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .staff-title { font-size: 12px; color: #aaa; margin-bottom: 10px; font-weight: bold; }
+        .staff-title { font-size: 11px; color: #888; margin-bottom: 12px; font-weight: bold; letter-spacing: 1px; }
         
-        /* スタッフ用ボタンの見た目 */
         button {
             background-color: #fff;
             color: #1a1a1a;
             border: none;
-            padding: 10px 15px;
+            padding: 10px 16px;
             font-size: 13px;
             font-weight: bold;
             border-radius: 20px;
             cursor: pointer;
-            margin: 4px;
+            margin: 5px 3px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: all 0.2s;
         }
-        button:active { transform: scale(0.95); }
-        .rest-btn { background-color: #e67e22; color: #fff; }
-        .other-btn { background-color: #3498db; color: #fff; }
-        .stay-btn { background-color: #2ecc71; color: #fff; }
-        .close-btn { background-color: #444; color: #fff; font-size: 11px; padding: 5px 10px; margin-top: 15px; }
-        .reset-btn { background-color: #ff4444; color: white; font-size: 11px; padding: 5px 10px; margin-top: 15px;}
+        button:active { transform: scale(0.95); opacity: 0.8; }
+        .rest-btn { background-color: #d35400; color: #fff; }
+        .other-btn { background-color: #2980b9; color: #fff; }
+        .stay-btn { background-color: #27ae60; color: #fff; }
+        .close-btn { background-color: #333; color: #aaa; font-size: 11px; padding: 6px 12px; margin-top: 15px; border-radius: 6px; }
+        .reset-btn { background-color: #c0392b; color: white; font-size: 11px; padding: 6px 12px; margin-top: 15px; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -112,9 +155,13 @@
     <div id="card" class="card-container">
         
         <div class="info-overlay">
-            <div>Member: GUEST USER</div>
-            <div>No: 2026-8871</div>
-            <div class="points-display">POINT: <span id="pt-count">0</span> pt</div>
+            <div class="member-info">GUEST USER</div>
+            <div class="member-info" style="margin-bottom: 0;">No. 2026-8871</div>
+            
+            <div class="points-container">
+                <div class="points-label">POINT</div>
+                <div class="points-display"><span id="pt-count">0</span><span class="points-unit">pt</span></div>
+            </div>
         </div>
         
         <div class="secret-trigger" onclick="handleSecretClick()"></div>
@@ -132,21 +179,15 @@
     </div>
 
     <script>
-        // 【設定】スタッフ用の4桁の暗証番号
         const STAFF_PIN = "7777"; 
-
-        // 【設定】各ランクに必要な合計ポイント（シルバー:10pt、ゴールド:30pt、プラチナ:60pt）
         const RANK_THRESHOLDS = { silver: 10, gold: 30, platinum: 60 }; 
 
-        // スマホに保存されているポイントを読み込み（データがなければ0からスタート）
         let points = parseInt(localStorage.getItem('hotel_points')) || 0;
         let currentRank = 'bronze';
         
-        // 3回タップ判定用の変数
         let clickCount = 0;
         let clickTimer = null;
 
-        // ポイントに応じて、用意した4枚の背景画像を自動で切り替える関数
         function updateUI() {
             document.getElementById('pt-count').innerText = points;
             const card = document.getElementById('card');
@@ -160,71 +201,4 @@
             } else if (points >= RANK_THRESHOLDS.silver) {
                 currentRank = 'silver';
                 card.style.backgroundImage = "url('silver.png')";
-            } else {
-                currentRank = 'bronze';
-                card.style.backgroundImage = "url('bronze.png')";
             }
-        }
-
-        // カードの右下をタップした時の処理（0.8秒以内に3回連続タップでメニューを表示）
-        function handleSecretClick() {
-            clickCount++;
-            clearTimeout(clickTimer);
-            clickTimer = setTimeout(() => { clickCount = 0; }, 800); 
-
-            if (clickCount === 3) {
-                clickCount = 0;
-                document.getElementById('staff-panel').style.display = 'block'; // スタッフメニューを表示
-                window.scrollTo(0, document.body.scrollHeight); // 画面を少し下にスクロール
-            }
-        }
-
-        // メニューを閉じる関数
-        function closePanel() { 
-            document.getElementById('staff-panel').style.display = 'none'; 
-        }
-
-        // スタッフがポイントを付与する時のロジック
-        function processStay(type) {
-            const pin = prompt(`【スタッフ確認】暗証番号を入力してください\n(${type}の処理)`);
-            if (pin !== STAFF_PIN) { 
-                alert("暗証番号が正しくありません。"); 
-                return; 
-            }
-
-            let addAmount = 0;
-            if (currentRank === 'bronze') { 
-                // ブロンズの時は一律で1ポイント
-                addAmount = 1; 
-            } else { 
-                // シルバー以上の時は、宿泊なら2ポイント、それ以外（休憩・その他休憩）は1ポイント
-                addAmount = (type === '宿泊') ? 2 : 1; 
-            }
-
-            points += addAmount;
-            localStorage.setItem('hotel_points', points); // スマホ（ブラウザ）にデータを永久保存
-            updateUI(); // 画面（画像やポイント数）を更新
-            closePanel(); // メニューを自動で隠す
-            
-            alert(`【処理完了】\n+${addAmount}pt を付与しました。`);
-        }
-
-        // データをゼロにリセットする関数
-        function resetPoint() {
-            const pin = prompt("【スタッフ確認】初期化コードを入力してください");
-            if (pin === STAFF_PIN) {
-                if(confirm('全てのポイントをリセットしますか？')) {
-                    points = 0;
-                    localStorage.setItem('hotel_points', points);
-                    updateUI();
-                    closePanel();
-                    alert('初期化しました。');
-                }
-            } else { alert("暗証番号が違います。"); }
-        }
-
-        // 起動時に一番最初の画面を表示する
-        updateUI();
-    </script>
-</body>
-</html>
