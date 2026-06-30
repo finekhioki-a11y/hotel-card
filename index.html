@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hotel Members Card</title>
-    <link rel="manifest" href="manifest.json?v=4">
+    <link rel="manifest" href="manifest.json?v=5">
     <style>
         body {
-            background-color: #0d0d0d; /* さらに深い黒にして高級感を演出 */
+            background-color: #0d0d0d; 
             color: #fff;
             font-family: 'Helvetica Neue', Arial, 'Noto Sans JP', sans-serif;
             display: flex;
@@ -24,48 +24,48 @@
         .card-container {
             width: 330px;
             height: 208px;
-            border-radius: 16px; /* 少しだけ丸みを強めてモダンに */
+            border-radius: 16px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.1);
             position: relative;
             overflow: hidden;
             box-sizing: border-box;
-            background-size: cover;
+            
+            /* 【ココを修正】画像をカードのサイズにぴったり合わせる設定を追加しました */
+            background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
             transition: background-image 0.8s ease;
         }
 
-        /* 【新デザイン】すりガラス風（グラスモーフィズム）の洗練されたインフォメーションエリア */
+        /* すりガラス風（グラスモーフィズム）のインフォメーションエリア */
         .info-overlay {
             position: absolute;
             right: 16px;
             top: 16px;
             pointer-events: none;
             
-            /* 背景を半透明にして、ぼかしエフェクト（すりガラス効果）を適用 */
             background: rgba(0, 0, 0, 0.4); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             
             padding: 12px 16px;
             border-radius: 12px;
-            /* 枠線を極細の半透明白にしてシャープな印象に */
             border: 1px solid rgba(255, 255, 255, 0.12);
             min-width: 150px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        /* ゲスト情報：小さくスタイリッシュに */
+        /* ゲスト情報 */
         .member-info {
             font-size: 9px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.6); /* 文字色を少し薄くして主役を譲る */
+            color: rgba(255, 255, 255, 0.6); 
             margin-bottom: 2px;
             font-family: monospace;
         }
 
-        /* 【主役】ポイントカウントの新しい高級デザイン */
+        /* ポイントカウントデザイン */
         .points-container {
             margin-top: 8px;
             display: flex;
@@ -78,15 +78,15 @@
             font-size: 9px;
             font-weight: bold;
             letter-spacing: 1.5px;
-            color: #d4af37; /* 高級感のあるゴールド（金）をアクセントに */
+            color: #d4af37; 
             text-transform: uppercase;
             margin-bottom: -2px;
         }
 
-        /* 数字部分：大胆に大きく、美しく */
+        /* 数字部分 */
         .points-display { 
-            font-size: 32px; /* 数字を圧倒的主役に */
-            font-weight: 200; /* あえて少し細めにすることで洗練されたハイブランド感を出します */
+            font-size: 32px; 
+            font-weight: 200; 
             color: #ffffff; 
             line-height: 1;
             letter-spacing: -0.5px;
@@ -201,4 +201,65 @@
             } else if (points >= RANK_THRESHOLDS.silver) {
                 currentRank = 'silver';
                 card.style.backgroundImage = "url('silver.png')";
+            } else {
+                currentRank = 'bronze';
+                card.style.backgroundImage = "url('bronze.png')";
             }
+        }
+
+        function handleSecretClick() {
+            clickCount++;
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => { clickCount = 0; }, 800); 
+
+            if (clickCount === 3) {
+                clickCount = 0;
+                document.getElementById('staff-panel').style.display = 'block';
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        }
+
+        // メニューを閉じる関数
+        function closePanel() { 
+            document.getElementById('staff-panel').style.display = 'none'; 
+        }
+
+        function processStay(type) {
+            const pin = prompt(`【スタッフ確認】暗証番号を入力してください\n(${type}の処理)`);
+            if (pin !== STAFF_PIN) { 
+                alert("暗証番号が正しくありません。"); 
+                return; 
+            }
+
+            let addAmount = 0;
+            if (currentRank === 'bronze') { 
+                addAmount = 1; 
+            } else { 
+                addAmount = (type === '宿泊') ? 2 : 1; 
+            }
+
+            points += addAmount;
+            localStorage.setItem('hotel_points', points);
+            updateUI();
+            closePanel();
+            
+            alert(`【処理完了】\n+${addAmount}pt を付与しました。`);
+        }
+
+        function resetPoint() {
+            const pin = prompt("【スタッフ確認】初期化コードを入力してください");
+            if (pin === STAFF_PIN) {
+                if(confirm('全てのポイントをリセットしますか？')) {
+                    points = 0;
+                    localStorage.setItem('hotel_points', points);
+                    updateUI();
+                    closePanel();
+                    alert('初期化しました。');
+                }
+            } else { alert("暗証番号が違います。"); }
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
