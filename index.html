@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hotel Members Card</title>
-    <link rel="manifest" href="manifest.json?v=9">
+    <link rel="manifest" href="manifest.json?v=11">
     <style>
         body {
             background-color: #0d0d0d; 
@@ -16,11 +16,13 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden;
+            padding: 20px; 
+            box-sizing: border-box;
+            overflow-y: auto; 
             touch-action: manipulation;
         }
 
-        /* 会員カードの土台 */
+        /* 会員カードの土台（通常・縦画面のとき：330px × 208px） */
         .card-container {
             width: 330px;
             height: 208px;
@@ -32,7 +34,8 @@
             background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
-            transition: background-image 0.8s ease;
+            transition: background-image 0.8s ease, width 0.3s ease, height 0.3s ease;
+            flex-shrink: 0; 
         }
 
         /* すりガラス風のインフォメーションエリア */
@@ -53,7 +56,7 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        /* ゲスト情報（文字が自動で切り替わる部分） */
+        /* ゲスト情報（文字サイズ指定） */
         .member-info {
             font-size: 9px;
             text-transform: uppercase;
@@ -81,7 +84,7 @@
             margin-bottom: -2px;
         }
 
-        /* 数字部分 */
+        /* 数字部分（通常は32px） */
         .points-display { 
             font-size: 32px; 
             font-weight: 200; 
@@ -109,52 +112,95 @@
             z-index: 10;
         }
 
-        /* スタッフ専用メニューの枠：黒をベースにほんのり茶の要素をプラス */
+        /* 💡【新機能】スマホを横向き（Landscape）にしたときの「文字・カード巨大化」設定 */
+        @media (orientation: landscape) {
+            /* カード自体を画面に合わせて一回り大きく（横450px・縦283px）します */
+            .card-container {
+                width: 450px;
+                height: 283px;
+                border-radius: 20px;
+            }
+            /* すりガラスエリア内のゆとりを広げます */
+            .info-overlay {
+                right: 24px;
+                top: 24px;
+                padding: 18px 24px;
+                min-width: 200px;
+                border-radius: 16px;
+            }
+            /* 会員文字を大きく（9px → 13px） */
+            .member-info {
+                font-size: 13px;
+                margin-bottom: 4px;
+            }
+            /* POINTラベルを大きく（9px → 13px） */
+            .points-label {
+                font-size: 13px;
+                margin-bottom: 2px;
+            }
+            /* ポイントの数字を圧倒的に大きく（32px → 48px）老眼でもハッキリ見えます！ */
+            .points-display {
+                font-size: 48px;
+            }
+            /* 単位のptも大きく（14px → 20px） */
+            .points-unit {
+                font-size: 20px;
+                margin-left: 4px;
+            }
+            /* 横画面時の隠しタップエリアも広げます */
+            .secret-trigger {
+                width: 110px;
+                height: 110px;
+            }
+        }
+
+        /* スタッフ専用メニューの枠 */
         .staff-section {
             display: none;
             margin-top: 25px;
             padding: 20px;
-            border: 1px solid rgba(212, 175, 55, 0.15); /* ほんのりゴールドの細線 */
+            border: 1px solid rgba(212, 175, 55, 0.15); 
             border-radius: 14px;
             text-align: center;
-            background-color: #12100e; /* 高級感のある極めて深いダークブラウン黒 */
+            background-color: #12100e; 
             width: 330px;
             box-sizing: border-box;
             animation: fadeIn 0.3s ease;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            flex-shrink: 0;
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
         .staff-title { 
             font-size: 11px; 
-            color: #d4af37; /* タイトルもゴールドに統一 */
+            color: #d4af37; 
             margin-bottom: 14px; 
             font-weight: bold; 
             letter-spacing: 1.5px; 
         }
         
-        /* 【注目】すべての操作ボタンを高級感のある「濃い茶色」に統一 */
+        /* 操作ボタン（濃い茶色） */
         button.action-btn {
-            background-color: #3d2a1d; /* 落ち着いた美しい濃い茶色（ダークブラウン） */
-            color: #f5f0eb; /* 少し温かみのあるクラシックホワイトの文字 */
+            background-color: #3d2a1d; 
+            color: #f5f0eb; 
             border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 11px 14px;
             font-size: 12px;
             font-weight: bold;
-            border-radius: 8px; /* 丸すぎない角丸にしてスタイリッシュに */
+            border-radius: 8px; 
             cursor: pointer;
             margin: 5px 3px;
-            width: 90px; /* 横幅を綺麗に揃えて美しく整列 */
+            width: 90px; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             transition: all 0.2s;
             display: inline-block;
         }
         button.action-btn:active { 
             transform: scale(0.96); 
-            background-color: #2b1d14; /* 押し込んだときはさらに深い茶色に */
+            background-color: #2b1d14; 
         }
         
-        /* 閉じるボタン：一歩引いたシックなグレー茶 */
+        /* 閉じるボタン */
         .close-btn { 
             background-color: #221f1d; 
             color: #8c827b; 
@@ -165,7 +211,7 @@
             border-radius: 6px; 
             cursor: pointer;
         }
-        /* 初期化ボタン：ここだけは誤操作を防ぐため、非常に落ち着いたトーンのダークレッド */
+        /* 初期化ボタン */
         .reset-btn { 
             background-color: #2a1414; 
             color: #a65151; 
