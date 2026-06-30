@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hotel Members Card</title>
-    <link rel="manifest" href="manifest.json?v=6">
+    <link rel="manifest" href="manifest.json?v=9">
     <style>
         body {
             background-color: #0d0d0d; 
@@ -109,43 +109,74 @@
             z-index: 10;
         }
 
-        /* スタッフ専用メニュー */
+        /* スタッフ専用メニューの枠：黒をベースにほんのり茶の要素をプラス */
         .staff-section {
             display: none;
             margin-top: 25px;
             padding: 20px;
-            border: 1px dashed rgba(255,255,255,0.15);
-            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.15); /* ほんのりゴールドの細線 */
+            border-radius: 14px;
             text-align: center;
-            background-color: #161616;
+            background-color: #12100e; /* 高級感のある極めて深いダークブラウン黒 */
             width: 330px;
             box-sizing: border-box;
             animation: fadeIn 0.3s ease;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .staff-title { font-size: 11px; color: #888; margin-bottom: 12px; font-weight: bold; letter-spacing: 1px; }
+        .staff-title { 
+            font-size: 11px; 
+            color: #d4af37; /* タイトルもゴールドに統一 */
+            margin-bottom: 14px; 
+            font-weight: bold; 
+            letter-spacing: 1.5px; 
+        }
         
-        button {
-            background-color: #fff;
-            color: #1a1a1a;
-            border: none;
-            padding: 10px 16px;
-            font-size: 13px;
+        /* 【注目】すべての操作ボタンを高級感のある「濃い茶色」に統一 */
+        button.action-btn {
+            background-color: #3d2a1d; /* 落ち着いた美しい濃い茶色（ダークブラウン） */
+            color: #f5f0eb; /* 少し温かみのあるクラシックホワイトの文字 */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 11px 14px;
+            font-size: 12px;
             font-weight: bold;
-            border-radius: 20px;
+            border-radius: 8px; /* 丸すぎない角丸にしてスタイリッシュに */
             cursor: pointer;
             margin: 5px 3px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            width: 90px; /* 横幅を綺麗に揃えて美しく整列 */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             transition: all 0.2s;
+            display: inline-block;
         }
-        button:active { transform: scale(0.95); opacity: 0.8; }
-        .rest-btn { background-color: #d35400; color: #fff; }
-        .other-btn { background-color: #2980b9; color: #fff; }
-        .stay-btn { background-color: #27ae60; color: #fff; }
-        .close-btn { background-color: #333; color: #aaa; font-size: 11px; padding: 6px 12px; margin-top: 15px; border-radius: 6px; }
-        .reset-btn { background-color: #c0392b; color: white; font-size: 11px; padding: 6px 12px; margin-top: 15px; border-radius: 6px; }
+        button.action-btn:active { 
+            transform: scale(0.96); 
+            background-color: #2b1d14; /* 押し込んだときはさらに深い茶色に */
+        }
+        
+        /* 閉じるボタン：一歩引いたシックなグレー茶 */
+        .close-btn { 
+            background-color: #221f1d; 
+            color: #8c827b; 
+            border: none;
+            font-size: 11px; 
+            padding: 8px 16px; 
+            margin-top: 15px; 
+            border-radius: 6px; 
+            cursor: pointer;
+        }
+        /* 初期化ボタン：ここだけは誤操作を防ぐため、非常に落ち着いたトーンのダークレッド */
+        .reset-btn { 
+            background-color: #2a1414; 
+            color: #a65151; 
+            border: none;
+            font-size: 11px; 
+            padding: 8px 16px; 
+            margin-top: 5px; 
+            border-radius: 6px; 
+            cursor: pointer;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -166,10 +197,10 @@
     </div>
 
     <div id="staff-panel" class="staff-section">
-        <div class="staff-title">【スタッフ専用メニュー】</div>
-        <button class="rest-btn" onclick="processStay('休憩')">休憩 (1pt)</button>
-        <button class="other-btn" onclick="processStay('その他休憩')">その他休憩 (1pt)</button>
-        <button class="stay-btn" onclick="processStay('宿泊')">宿泊 (2pt※)</button>
+        <div class="staff-title">MANAGEMENT MENU</div>
+        <button class="action-btn" onclick="processStay('休憩')">休憩<br><span style="font-size:10px; font-weight:normal; opacity:0.7;">(1pt)</span></button>
+        <button class="action-btn" onclick="processStay('その他休憩')">他休憩<br><span style="font-size:10px; font-weight:normal; opacity:0.7;">(1pt)</span></button>
+        <button class="action-btn" onclick="processStay('宿泊')">宿泊<br><span style="font-size:10px; font-weight:normal; opacity:0.7;">(2pt※)</span></button>
         <br>
         <button class="close-btn" onclick="closePanel()">メニューを閉じる</button>
         <br>
@@ -182,11 +213,10 @@
 
         let points = parseInt(localStorage.getItem('hotel_points')) || 0;
         let currentRank = 'bronze';
-        
+
         let clickCount = 0;
         let clickTimer = null;
 
-        // ポイントに応じて画像と「USER文字」を同時に切り替える関数
         function updateUI() {
             document.getElementById('pt-count').innerText = points;
             const card = document.getElementById('card');
@@ -200,69 +230,3 @@
                 currentRank = 'gold';
                 card.style.backgroundImage = "url('gold.png')";
                 rankText.innerText = "GOLD USER";
-            } else if (points >= RANK_THRESHOLDS.silver) {
-                currentRank = 'silver';
-                card.style.backgroundImage = "url('silver.png')";
-                rankText.innerText = "SILVER USER";
-            } else {
-                currentRank = 'bronze';
-                card.style.backgroundImage = "url('bronze.png')";
-                rankText.innerText = "BRONZE USER";
-            }
-        }
-
-        function handleSecretClick() {
-            clickCount++;
-            clearTimeout(clickTimer);
-            clickTimer = setTimeout(() => { clickCount = 0; }, 800); 
-
-            if (clickCount === 3) {
-                clickCount = 0;
-                document.getElementById('staff-panel').style.display = 'block';
-                window.scrollTo(0, document.body.scrollHeight);
-            }
-        }
-
-        function closePanel() { 
-            document.getElementById('staff-panel').style.display = 'none'; 
-        }
-
-        function processStay(type) {
-            const pin = prompt(`【スタッフ確認】暗証番号を入力してください\n(${type}の処理)`);
-            if (pin !== STAFF_PIN) { 
-                alert("暗証番号が正しくありません。"); 
-                return; 
-            }
-
-            let addAmount = 0;
-            if (currentRank === 'bronze') { 
-                addAmount = 1; 
-            } else { 
-                addAmount = (type === '宿泊') ? 2 : 1; 
-            }
-
-            points += addAmount;
-            localStorage.setItem('hotel_points', points);
-            updateUI();
-            closePanel();
-            
-            alert(`【処理完了】\n+${addAmount}pt を付与しました。`);
-        }
-
-        function resetPoint() {
-            const pin = prompt("【スタッフ確認】初期化コードを入力してください");
-            if (pin === STAFF_PIN) {
-                if(confirm('全てのポイントをリセットしますか？')) {
-                    points = 0;
-                    localStorage.setItem('hotel_points', points);
-                    updateUI();
-                    closePanel();
-                    alert('初期化しました。');
-                }
-            } else { alert("暗証番号が違います。"); }
-        }
-
-        updateUI();
-    </script>
-</body>
-</html>
