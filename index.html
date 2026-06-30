@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hotel Members Card</title>
-    <link rel="manifest" href="manifest.json?v=5">
+    <link rel="manifest" href="manifest.json?v=6">
     <style>
         body {
             background-color: #0d0d0d; 
@@ -29,15 +29,13 @@
             position: relative;
             overflow: hidden;
             box-sizing: border-box;
-            
-            /* 【ココを修正】画像をカードのサイズにぴったり合わせる設定を追加しました */
             background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
             transition: background-image 0.8s ease;
         }
 
-        /* すりガラス風（グラスモーフィズム）のインフォメーションエリア */
+        /* すりガラス風のインフォメーションエリア */
         .info-overlay {
             position: absolute;
             right: 16px;
@@ -55,7 +53,7 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        /* ゲスト情報 */
+        /* ゲスト情報（文字が自動で切り替わる部分） */
         .member-info {
             font-size: 9px;
             text-transform: uppercase;
@@ -155,7 +153,7 @@
     <div id="card" class="card-container">
         
         <div class="info-overlay">
-            <div class="member-info">GUEST USER</div>
+            <div id="rank-text" class="member-info">BRONZE USER</div>
             <div class="member-info" style="margin-bottom: 0;">No. 2026-8871</div>
             
             <div class="points-container">
@@ -188,22 +186,28 @@
         let clickCount = 0;
         let clickTimer = null;
 
+        // ポイントに応じて画像と「USER文字」を同時に切り替える関数
         function updateUI() {
             document.getElementById('pt-count').innerText = points;
             const card = document.getElementById('card');
+            const rankText = document.getElementById('rank-text');
             
             if (points >= RANK_THRESHOLDS.platinum) {
                 currentRank = 'platinum';
                 card.style.backgroundImage = "url('platinum.png')";
+                rankText.innerText = "PLATINUM USER";
             } else if (points >= RANK_THRESHOLDS.gold) {
                 currentRank = 'gold';
                 card.style.backgroundImage = "url('gold.png')";
+                rankText.innerText = "GOLD USER";
             } else if (points >= RANK_THRESHOLDS.silver) {
                 currentRank = 'silver';
                 card.style.backgroundImage = "url('silver.png')";
+                rankText.innerText = "SILVER USER";
             } else {
                 currentRank = 'bronze';
                 card.style.backgroundImage = "url('bronze.png')";
+                rankText.innerText = "BRONZE USER";
             }
         }
 
@@ -219,7 +223,6 @@
             }
         }
 
-        // メニューを閉じる関数
         function closePanel() { 
             document.getElementById('staff-panel').style.display = 'none'; 
         }
