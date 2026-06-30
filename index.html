@@ -230,3 +230,69 @@
                 currentRank = 'gold';
                 card.style.backgroundImage = "url('gold.png')";
                 rankText.innerText = "GOLD USER";
+            } else if (points >= RANK_THRESHOLDS.silver) {
+                currentRank = 'silver';
+                card.style.backgroundImage = "url('silver.png')";
+                rankText.innerText = "SILVER USER";
+            } else {
+                currentRank = 'bronze';
+                card.style.backgroundImage = "url('bronze.png')";
+                rankText.innerText = "BRONZE USER";
+            }
+        }
+
+        function handleSecretClick() {
+            clickCount++;
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => { clickCount = 0; }, 800); 
+
+            if (clickCount === 3) {
+                clickCount = 0;
+                document.getElementById('staff-panel').style.display = 'block';
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        }
+
+        function closePanel() { 
+            document.getElementById('staff-panel').style.display = 'none'; 
+        }
+
+        function processStay(type) {
+            const pin = prompt(`【スタッフ確認】暗証番号を入力してください\n(${type}の処理)`);
+            if (pin !== STAFF_PIN) { 
+                alert("暗証番号が正しくありません。"); 
+                return; 
+            }
+
+            let addAmount = 0;
+            if (currentRank === 'bronze') { 
+                addAmount = 1; 
+            } else { 
+                addAmount = (type === '宿泊') ? 2 : 1; 
+            }
+
+            points += addAmount;
+            localStorage.setItem('hotel_points', points);
+            updateUI();
+            closePanel();
+            
+            alert(`【処理完了】\n+${addAmount}pt を付与しました。`);
+        }
+
+        function resetPoint() {
+            const pin = prompt("【スタッフ確認】初期化コードを入力してください");
+            if (pin === STAFF_PIN) {
+                if(confirm('全てのポイントをリセットしますか？')) {
+                    points = 0;
+                    localStorage.setItem('hotel_points', points);
+                    updateUI();
+                    closePanel();
+                    alert('初期化しました。');
+                }
+            } else { alert("暗証番号が違います。"); }
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
