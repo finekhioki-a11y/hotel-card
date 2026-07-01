@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>ホテル会員証 デモアプリ</title>
+  <title>ホテルファインメンバーズ</title>
   
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#111111">
@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="ファインメンバーズ">
+  <meta name="apple-mobile-web-app-title" content="ホテルファイン">
 
   <style>
     /* --- 基本リセット ＆ 全体スタイル --- */
@@ -195,7 +195,6 @@
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    /* タップした時に少し沈む演出 */
     .event-card:active {
       transform: scale(0.98);
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
@@ -268,13 +267,12 @@
       <div class="hero-section"></div>
       <div class="hotel-logo-area">
         <img src="icon.png" alt="ホテルロゴ" class="hotel-logo">
-        <h2>ファインメンバーズ</h2>
+        <h2>ホテルファイン</h2>
       </div>
       
       <div class="home-card-wrapper">
         <div id="home-card-element" class="membership-card card-bronze">
           <div style="font-size: 16px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
-          <!-- 不要なデモテキスト（名前・番号・ランク）を削除しました -->
         </div>
       </div>
 
@@ -292,7 +290,6 @@
     <div class="page-content center-content">
       <div id="member-card-element" class="membership-card card-bronze" style="margin-top: 10px;">
         <div style="font-size: 16px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
-        <!-- 不要なデモテキスト（名前・番号・ランク）を削除しました -->
       </div>
 
       <div class="point-panel">
