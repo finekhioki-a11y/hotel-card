@@ -41,12 +41,13 @@
       flex: 1;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      padding-bottom: 20px;
+      padding-bottom: 30px;
     }
     .page.active {
       display: block;
     }
 
+    /* 会員証画面用レイアウト調整 */
     .page.flex-center {
       display: none;
     }
@@ -54,6 +55,33 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+    }
+
+    /* 【新設】ホーム以外の画面が上に行き過ぎないようにするためのヘッダータイトルエリア */
+    .page-header {
+      width: 100%;
+      padding: 30px 20px 10px 20px; /* 上部にしっかり余白（30px）を持たせる */
+      text-align: center;
+      background-color: #f5f5f5;
+    }
+    .page-header h2 {
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: #222;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+    /* タイトルの下にさりげないゴールドの下線を引いてアプリ感をアップ */
+    .page-header h2::after {
+      content: '';
+      position: absolute;
+      left: 20%;
+      bottom: 0;
+      width: 60%;
+      height: 2px;
+      background: #d4af37;
     }
 
     /* --- ホーム画面：トップ画像エリア --- */
@@ -65,7 +93,6 @@
       background-position: center;
     }
 
-    /* ホテルロゴ用スタイル */
     .hotel-logo-area {
       display: flex;
       align-items: center;
@@ -110,7 +137,7 @@
 
     /* --- クーポン画面スタイル --- */
     .coupon-container {
-      padding: 15px;
+      padding: 5px 15px 15px 15px;
     }
     .coupon-card {
       background: #fff;
@@ -157,7 +184,7 @@
     /* --- イベント画面 --- */
     .event-card {
       background: #fff;
-      margin: 15px;
+      margin: 5px 15px 15px 15px;
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -246,7 +273,11 @@
   </div>
 
   <div id="card-page" class="page flex-center card-section">
-    <div id="member-card-element" class="membership-card card-bronze">
+    <div class="page-header">
+      <h2>デジタル会員証</h2>
+    </div>
+
+    <div id="member-card-element" class="membership-card card-bronze" style="margin-top: 10px;">
       <div style="font-size: 16px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
       <div id="card-rank-text" class="card-sub-text" style="margin-top: 35px; font-size: 13px; color: #ccc;">RANK: BRONZE</div>
       <div style="margin-top: 5px; font-size: 18px; letter-spacing: 1px;">TAROU TANAKA</div>
@@ -267,6 +298,10 @@
   </div>
 
   <div id="event-page" class="page">
+    <div class="page-header">
+      <h2>イベント情報</h2>
+    </div>
+
     <div class="event-card">
       <div class="event-img"></div>
       <div class="event-detail">
@@ -279,6 +314,10 @@
   </div>
 
   <div id="coupon-page" class="page">
+    <div class="page-header">
+      <h2>ご利用可能クーポン</h2>
+    </div>
+
     <div class="coupon-container">
       <div class="coupon-card">
         <div class="coupon-body">
@@ -297,95 +336,3 @@
         </div>
         <div class="coupon-footer">
           <span style="font-size: 11px; color: #999;">有効期限: ご利用当日限り</span>
-          <button class="use-btn" onclick="alert('クーポンを使用しました')">使用する</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <nav class="bottom-nav">
-    <div class="nav-item active" onclick="switchPage('home-page')">ホーム</div>
-    <div class="nav-item" onclick="switchPage('card-page')">会員証</div>
-    <div class="nav-item" onclick="switchPage('event-page')">イベント</div>
-    <div class="nav-item" onclick="switchPage('coupon-page')">クーポン</div>
-  </nav>
-
-  <script>
-    let currentPoints = 0;
-    let currentRank = 'bronze';
-
-    // 【新設】Service Worker の登録（PWAインストール要件）
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error:', err));
-    }
-
-    function switchPage(pageId) {
-      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-
-      const targetPage = document.getElementById(pageId);
-      if (targetPage) targetPage.classList.add('active');
-
-      const clickedNav = Array.from(document.querySelectorAll('.nav-item')).find(item => item.getAttribute('onclick').includes(pageId));
-      if (clickedNav) clickedNav.classList.add('active');
-    }
-
-    function addPoint(type) {
-      let pointsToAdd = 0;
-      if (currentRank === 'bronze') {
-        pointsToAdd = 1;
-      } else {
-        pointsToAdd = (type === 'stay') ? 2 : 1;
-      }
-
-      currentPoints += pointsToAdd;
-      document.getElementById('current-pts').innerText = currentPoints;
-
-      let newRank = 'bronze';
-      if (currentPoints >= 30) {
-        newRank = 'platinum';
-      } else if (currentPoints >= 15) {
-        newRank = 'gold';
-      } else if (currentPoints >= 5) {
-        newRank = 'silver';
-      }
-
-      if (newRank !== currentRank) {
-        currentRank = newRank;
-        updateCardUI();
-      }
-    }
-
-    function updateCardUI() {
-      const card = document.getElementById('member-card-element');
-      const homeCard = document.getElementById('home-card-element');
-      const rankText = document.getElementById('card-rank-text');
-      const homeRankText = document.getElementById('home-card-rank-text');
-      
-      const cardList = [card, homeCard];
-      cardList.forEach(c => {
-        if(c) c.classList.remove('card-bronze', 'card-silver', 'card-gold', 'card-platinum');
-      });
-      
-      let rankString = 'RANK: BRONZE';
-      let className = 'card-bronze';
-
-      if (currentRank === 'silver') {
-        className = 'card-silver';
-        rankString = 'RANK: SILVER';
-      } else if (currentRank === 'gold') {
-        className = 'card-gold';
-        rankString = 'RANK: GOLD';
-      } else if (currentRank === 'platinum') {
-        className = 'card-platinum';
-        rankString = 'RANK: PLATINUM';
-      }
-
-      cardList.forEach(c => { if(c) c.classList.add(className); });
-      if(rankText) rankText.innerText = rankString;
-      if(homeRankText) homeRankText.innerText = rankString;
-    }
-  </script>
-
-</body>
-</html>
