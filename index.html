@@ -24,7 +24,7 @@
     html, body {
       height: 100%;
       height: 100dvh;
-      overflow: hidden; /* 親画面全体での不要なスクロールを完全に禁止 */
+      overflow: hidden;
     }
 
     body {
@@ -39,7 +39,7 @@
     .page {
       display: none;
       flex: 1;
-      height: calc(100dvh - 65px); /* 全体の高さから下のメニューバー（65px）を引いたサイズに固定 */
+      height: calc(100dvh - 65px);
       overflow: hidden;
     }
     .page.active {
@@ -47,13 +47,13 @@
       flex-direction: column;
     }
 
-    /* 画面上部：行き過ぎを防ぐためのヘッダータイトルエリア */
+    /* 画面上部：ヘッダータイトルエリア */
     .page-header {
       width: 100%;
-      padding: 25px 20px 10px 20px; /* 上部にしっかり余白を持たせる */
+      padding: 25px 20px 10px 20px;
       text-align: center;
       background-color: #f5f5f5;
-      flex-shrink: 0; /* ヘッダーが潰れないように固定 */
+      flex-shrink: 0;
     }
     .page-header h2 {
       font-size: 18px;
@@ -74,15 +74,14 @@
       background: #d4af37;
     }
 
-    /* 画面の中身（コンテンツ部分）だけをスクロールさせる設定（重要） */
+    /* 画面の中身（コンテンツ部分）スクロール設定 */
     .page-content {
       flex: 1;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      padding-bottom: 20px;
+      padding-bottom: 30px; /* 下部メニューに被らないよう余白を少し多めに */
       width: 100%;
     }
-    /* 会員証画面の中身を中央寄せにする */
     .center-content {
       display: flex;
       flex-direction: column;
@@ -186,18 +185,17 @@
       cursor: pointer;
     }
 
-    /* --- イベント画面 --- */
+    /* --- イベント画面スタイル --- */
     .event-card {
       background: #fff;
-      margin: 5px 15px 15px 15px;
+      margin: 10px 15px 20px 15px; /* カードごとの隙間を広めに調整 */
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .event-img {
       width: 100%;
       height: 180px;
-      background-image: url('hiyashimen2026.jpg');
       background-size: cover;
       background-position: center;
     }
@@ -228,7 +226,7 @@
       font-weight: bold;
     }
 
-    /* --- 下部メニューバー（絶対に画面から押し出されない） --- */
+    /* --- 下部メニューバー --- */
     .bottom-nav {
       height: 65px;
       background-color: #ffffff;
@@ -238,7 +236,7 @@
       align-items: center;
       padding-bottom: env(safe-area-inset-bottom);
       width: 100%;
-      flex-shrink: 0; /* メニューバーが潰れるのを絶対に防ぐ */
+      flex-shrink: 0;
     }
     .nav-item {
       flex: 1;
@@ -308,14 +306,16 @@
     </div>
   </div>
 
-  <!-- イベント画面 -->
+  <!-- イベント画面（2つのイベントが縦スクロールで並びます） -->
   <div id="event-page" class="page">
     <div class="page-header">
       <h2>イベント情報</h2>
     </div>
     <div class="page-content">
+      
+      <!-- イベント1: 冷やし麺 -->
       <div class="event-card">
-        <div class="event-img"></div>
+        <div class="event-img" style="background-image: url('hiyashimen2026.jpg');"></div>
         <div class="event-detail">
           <h3 style="font-size: 15px; color: #111;">この夏は、ひんやり喉ごし。進化した冷やし麺フェア！</h3>
           <p style="margin-top: 8px; font-size: 12px; color: #555; line-height: 1.5;">
@@ -323,6 +323,21 @@
           </p>
         </div>
       </div>
+
+      <!-- 【新設】イベント2: MONIN クラフトソーダ -->
+      <div class="event-card">
+        <div class="event-img" style="background-image: url('monan_craftsoda.jpg');"></div>
+        <div class="event-detail">
+          <h3 style="font-size: 15px; color: #111;">香るMONIN クラフトソーダ</h3>
+          <p style="margin-top: 8px; font-size: 12px; color: #555; line-height: 1.5; font-weight: bold; color: #d4af37;">
+            フルーツの香りが広がるご褒美チルソーダ。
+          </p>
+          <p style="margin-top: 4px; font-size: 12px; color: #666; line-height: 1.5;">
+            ストロベリー、柚子ジンジャー、マンゴーオレンジ。
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -357,7 +372,7 @@
     </div>
   </div>
 
-  <!-- 固定下部メニューバー -->
+  <!-- 下部メニューバー -->
   <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchPage('home-page')">ホーム</div>
     <div class="nav-item" onclick="switchPage('card-page')">会員証</div>
@@ -375,14 +390,12 @@
     }
 
     function switchPage(pageId) {
-      // 一旦すべてのページを非表示にする
       document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
         page.style.display = 'none';
       });
       document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
 
-      // 対象のページを flex として正しく表示する
       const targetPage = document.getElementById(pageId);
       if (targetPage) {
         targetPage.classList.add('active');
