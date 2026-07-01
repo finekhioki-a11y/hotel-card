@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hotel Fine Members</title>
-    <link rel="manifest" href="manifest.json?v=13">
+    <link rel="manifest" href="manifest.json?v=16">
     <style>
         /* --- 共通デザイン（ラグジュアリー・ダークテーマ） --- */
         body {
@@ -47,23 +47,26 @@
         }
 
         /* --- 1. HOME画面のデザイン --- */
+        /* 💡あなたがアップロードする「main_img01.jpg」を背景に読み込むように設定しました！ */
         .hero-banner {
             width: 100%;
-            height: 160px;
-            background: linear-gradient(135deg, #2c1f16, #120e0a);
+            height: 180px;
+            background-image: linear-gradient(135deg, rgba(20, 14, 10, 0.8), rgba(10, 8, 6, 0.85)), url('main_img01.jpg');
+            background-size: cover;
+            background-position: center;
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(214, 175, 55, 0.2);
+            border: 1px solid rgba(214, 175, 55, 0.25);
             margin-bottom: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
         .hero-text {
             text-align: center;
         }
-        .hero-text h2 { margin: 0; font-size: 18px; color: #d4af37; letter-spacing: 2px; }
-        .hero-text p { margin: 5px 0 0 0; font-size: 10px; color: #aaa; }
+        .hero-text h2 { margin: 0; font-size: 20px; color: #d4af37; letter-spacing: 3px; text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
+        .hero-text p { margin: 6px 0 0 0; font-size: 10px; color: #ccc; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
 
         .section-title {
             font-size: 13px;
@@ -170,7 +173,7 @@
             width: 100%; background-color: #161412; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 6px 15px rgba(0,0,0,0.4);
             border: 1px solid rgba(214, 175, 55, 0.15);
         }
-        /* 💡グレーの箱から、本物の「冷やし麺」のシズル感ある高画質フリー写真に変更！ */
+        /* 💡イベント用の仮画像（高画質な冷やし麺の写真）が最初から読み込まれるようにしています */
         .event-img-placeholder { 
             width: 100%; 
             height: 160px; 
@@ -181,7 +184,6 @@
             align-items: flex-end; 
             justify-content: flex-start;
         }
-        /* 写真の上に文字を乗せるグラデーション背景 */
         .event-img-title {
             width: 100%;
             padding: 30px 14px 10px 14px;
@@ -198,7 +200,7 @@
         .event-title { font-size: 14px; font-weight: bold; margin: 4px 0 6px 0; color: #fff; }
         .event-text { font-size: 11px; color: #aaa; line-height: 1.4; }
 
-        /* --- 大企業風・固定下部メニュー（タブバー） --- */
+        /* --- 大企業風・固定下部メニュー --- */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; height: 64px;
             background: rgba(15, 13, 12, 0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -212,10 +214,8 @@
 </head>
 <body>
 
-    <!-- アプリメイン表示部分 -->
     <div class="app-container">
 
-        <!-- 🏠 1. ホーム画面 -->
         <div id="page-home" class="app-page active">
             <div class="hero-banner">
                 <div class="hero-text">
@@ -227,7 +227,7 @@
             <div class="section-title">✨ TOPICS / お知らせ</div>
             <div class="news-card">
                 <div class="news-date">2026.07.01</div>
-                <div class="news-title">プレミアムサマーフェア開催のご案内</div>
+                <div class="news-title">夏季限定「夏の冷やし麺フェア」スタートのご案内</div>
             </div>
             <div class="news-card">
                 <div class="news-date">2026.06.20</div>
@@ -239,7 +239,6 @@
             </div>
         </div>
 
-        <!-- 💳 2. 会員証画面 -->
         <div id="page-card" class="app-page">
             <div class="card-wrapper">
                 <div id="card" class="card-container">
@@ -257,174 +256,4 @@
 
                 <div id="staff-panel" class="staff-section">
                     <div class="staff-title">MANAGEMENT MENU</div>
-                    <button class="action-btn" onclick="processStay('休憩')">休憩<br><span style="font-size:10px; font-weight:normal; opacity:0.7;">(1pt)</span></button>
-                    <button class="action-btn" onclick="processStay('その他休憩')">他休憩<br><span style="font-size:10px; font-weight:normal; opacity:0.7;">(1pt)</span></button>
-                    <button class="action-btn" onclick="processStay('宿泊')">宿泊<br><span style="font-size:10px; font-weight:normal; opacity:0.7;">(2pt※)</span></button>
-                    <br>
-                    <button class="close-btn" onclick="closePanel()">メニューを閉じる</button>
-                    <br>
-                    <button class="reset-btn" onclick="resetPoint()">データを初期化</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 🎁 3. クーポン画面 -->
-        <div id="page-coupon" class="app-page">
-            <div class="section-title">🎁 AVAILABLE COUPONS</div>
-            
-            <div class="coupon-card">
-                <div class="coupon-badge">全員対象</div>
-                <div class="coupon-title">ご休憩 500円OFF クーポン</div>
-                <div class="coupon-desc">チェックイン時にフロントスタッフにご提示ください。</div>
-                <div class="coupon-expiry">有効期限: 2026.08.31 まで</div>
-            </div>
-
-            <div class="coupon-card" style="opacity: 0.8;">
-                <div class="coupon-badge" style="background-color: #4a3b32;">SILVER以上限定</div>
-                <div class="coupon-title">ウェルカムドリンク 1杯無料</div>
-                <div class="coupon-desc">シルバーランク以上の会員様限定の特典クーポンです。</div>
-                <div class="coupon-expiry">有効期限: 2026.12.31 まで</div>
-            </div>
-        </div>
-
-        <!-- 📢 4. イベント・広告画面 -->
-        <div id="page-event" class="app-page">
-            <div class="section-title">📢 CAMPAIGN & EVENTS</div>
-            
-            <div class="event-banner">
-                <!-- 💡ここに冷やし麺の写真を配置し、タイトルを重ねました -->
-                <div class="event-img-placeholder">
-                    <div class="event-img-title">夏の冷やし麺フェア</div>
-                </div>
-                <div class="event-body">
-                    <div class="event-tag">夏季限定フード</div>
-                    <div class="event-title">ひんやり喉ごし、極上のひととき</div>
-                    <div class="event-text">暑い夏にぴったりの、特製すだち冷やし麺をルームサービスにてご用意いたしました。厳選した出汁と爽やかなシトラスの香りをお楽しみください。</div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- 📱 固定下部メニューバー -->
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('home', this)">
-            <div class="nav-icon">H</div>
-            <div>ホーム</div>
-        </div>
-        <div class="nav-item" onclick="switchTab('card', this)">
-            <div class="nav-icon">C</div>
-            <div>会員証</div>
-        </div>
-        <div class="nav-item" onclick="switchTab('coupon', this)">
-            <div class="nav-icon">P</div>
-            <div>クーポン</div>
-        </div>
-        <div class="nav-item" onclick="switchTab('event', this)">
-            <div class="nav-icon">E</div>
-            <div>イベント</div>
-        </div>
-    </nav>
-
-    <!-- --- システム処理スクリプト --- -->
-    <script>
-        const STAFF_PIN = "7777"; 
-        const RANK_THRESHOLDS = { silver: 10, gold: 30, platinum: 60 }; 
-
-        let points = parseInt(localStorage.getItem('hotel_points')) || 0;
-        let currentRank = 'bronze';
-
-        let clickCount = 0;
-        let clickTimer = null;
-
-        function switchTab(pageId, element) {
-            const pages = document.querySelectorAll('.app-page');
-            pages.forEach(page => page.classList.remove('active'));
-            
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => item.classList.remove('active'));
-            
-            document.getElementById(`page-${pageId}`).classList.add('active');
-            element.classList.add('active');
-            
-            window.scrollTo(0, 0);
-        }
-
-        function updateUI() {
-            document.getElementById('pt-count').innerText = points;
-            const card = document.getElementById('card');
-            const rankText = document.getElementById('rank-text');
-            
-            if (points >= RANK_THRESHOLDS.platinum) {
-                currentRank = 'platinum';
-                card.style.backgroundImage = "url('platinum.png')";
-                rankText.innerText = "PLATINUM USER";
-            } else if (points >= RANK_THRESHOLDS.gold) {
-                currentRank = 'gold';
-                card.style.backgroundImage = "url('gold.png')";
-                rankText.innerText = "GOLD USER";
-            } else if (points >= RANK_THRESHOLDS.silver) {
-                currentRank = 'silver';
-                card.style.backgroundImage = "url('silver.png')";
-                rankText.innerText = "SILVER USER";
-            } else {
-                currentRank = 'bronze';
-                card.style.backgroundImage = "url('bronze.png')";
-                rankText.innerText = "BRONZE USER";
-            }
-        }
-
-        function handleSecretClick() {
-            clickCount++;
-            clearTimeout(clickTimer);
-            clickTimer = setTimeout(() => { clickCount = 0; }, 800); 
-
-            if (clickCount === 3) {
-                clickCount = 0;
-                document.getElementById('staff-panel').style.display = 'block';
-            }
-        }
-
-        function closePanel() { 
-            document.getElementById('staff-panel').style.display = 'none'; 
-        }
-
-        function processStay(type) {
-            const pin = prompt(`【スタッフ確認】暗証番号を入力してください\n(${type}の処理)`);
-            if (pin !== STAFF_PIN) { 
-                alert("暗証番号が正しくありません。"); 
-                return; 
-            }
-
-            let addAmount = 0;
-            if (currentRank === 'bronze') { 
-                addAmount = 1; 
-            } else { 
-                addAmount = (type === '宿泊') ? 2 : 1; 
-            }
-
-            points += addAmount;
-            localStorage.setItem('hotel_points', points);
-            updateUI();
-            closePanel();
-            
-            alert(`【処理完了】\n+${addAmount}pt を付与しました。`);
-        }
-
-        function resetPoint() {
-            const pin = prompt("【スタッフ確認】初期化コードを入力してください");
-            if (pin === STAFF_PIN) {
-                if(confirm('全てのポイントをリセットしますか？')) {
-                    points = 0;
-                    localStorage.setItem('hotel_points', points);
-                    updateUI();
-                    closePanel();
-                    alert('初期化しました。');
-                }
-            } else { alert("暗証番号が違います。"); }
-        }
-
-        updateUI();
-    </script>
-</body>
-</html>
+                    <button class="action-btn" onclick="processStay
