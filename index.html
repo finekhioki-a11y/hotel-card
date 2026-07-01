@@ -185,22 +185,17 @@
       cursor: pointer;
     }
 
-    /* --- イベント画面スタイル（リンク用の設定を微調整） --- */
-    .event-link {
-      text-decoration: none; /* 下線を消す */
-      color: inherit; /* 文字色を親要素から引き継ぐ */
-      display: block;
-      cursor: pointer;
-    }
+    /* --- イベント画面スタイル --- */
     .event-card {
       background: #fff;
       margin: 10px 15px 20px 15px;
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      cursor: pointer; /* マウスが乗った時にポインタにする */
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    /* タップした時に少し沈む演出（リンクっぽさ、アプリ感を出すため） */
+    /* タップした時に少し沈む演出 */
     .event-card:active {
       transform: scale(0.98);
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
@@ -246,4 +241,239 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      padding-bottom
+      padding-bottom: env(safe-area-inset-bottom);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      color: #666;
+      text-decoration: none;
+      cursor: pointer;
+      padding: 10px 0;
+    }
+    .nav-item.active {
+      color: #d4af37;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ホーム画面 -->
+  <div id="home-page" class="page active">
+    <div class="page-content">
+      <div class="hero-section"></div>
+      <div class="hotel-logo-area">
+        <img src="icon.png" alt="ホテルロゴ" class="hotel-logo">
+        <h2>ファインメンバーズ</h2>
+      </div>
+      
+      <div class="home-card-wrapper">
+        <div id="home-card-element" class="membership-card card-bronze">
+          <div style="font-size: 16px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
+          <div id="home-card-rank-text" class="card-sub-text" style="margin-top: 35px; font-size: 13px; color: #ccc;">RANK: BRONZE</div>
+          <div style="margin-top: 5px; font-size: 18px; letter-spacing: 1px;">TAROU TANAKA</div>
+          <div id="home-card-no-text" class="card-sub-text" style="position: absolute; bottom: 20px; right: 20px; font-size: 11px; color: #aaa;">No. 1234-5678</div>
+        </div>
+      </div>
+
+      <div style="padding: 10px 20px; text-align: center;">
+        <p style="color: #666; font-size: 13px;">快適なご滞在をサポートいたします。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 会員証表示画面 -->
+  <div id="card-page" class="page">
+    <div class="page-header">
+      <h2>デジタル会員証</h2>
+    </div>
+    <div class="page-content center-content">
+      <div id="member-card-element" class="membership-card card-bronze" style="margin-top: 10px;">
+        <div style="font-size: 16px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
+        <div id="card-rank-text" class="card-sub-text" style="margin-top: 35px; font-size: 13px; color: #ccc;">RANK: BRONZE</div>
+        <div style="margin-top: 5px; font-size: 18px; letter-spacing: 1px;">TAROU TANAKA</div>
+        <div id="card-no-text" class="card-sub-text" style="position: absolute; bottom: 20px; right: 20px; font-size: 11px; color: #aaa;">No. 1234-5678</div>
+      </div>
+
+      <div class="point-panel">
+        <p style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">
+          現在の保有ポイント: <span id="current-pts" style="color: #d4af37; font-size: 18px;">0</span> pt
+        </p>
+        <button class="btn" onclick="addPoint('rest')">休憩を利用</button>
+        <button class="btn" onclick="addPoint('stay')">宿泊を利用</button>
+        <p style="font-size: 11px; color: #999; margin-top: 10px;">
+          ※ブロンズ: 休憩1/宿泊1 | シルバー以上: 休憩1/宿泊2<br>
+          (5ptで銀 / 15ptで金 / 30ptで白金)
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- イベント画面 -->
+  <div id="event-page" class="page">
+    <div class="page-header">
+      <h2>イベント情報</h2>
+    </div>
+    <div class="page-content">
+      
+      <!-- イベント1: 冷やし麺 (JSでリンク処理) -->
+      <div class="event-card" onclick="openEventLink()">
+        <div class="event-img" style="background-image: url('hiyashimen2026.jpg');"></div>
+        <div class="event-detail">
+          <h3 style="font-size: 15px; color: #111;">この夏は、ひんやり喉ごし。進化した冷やし麺フェア！</h3>
+          <p style="margin-top: 8px; font-size: 12px; color: #555; line-height: 1.5;">
+            うだるような暑さを吹き飛ばす、冷たい美味しさが今年は5種類パワーアップ！
+          </p>
+        </div>
+      </div>
+
+      <!-- イベント2: MONIN クラフトソーダ (JSでリンク処理) -->
+      <div class="event-card" onclick="openEventLink()">
+        <div class="event-img" style="background-image: url('monan_craftsoda.jpg');"></div>
+        <div class="event-detail">
+          <h3 style="font-size: 15px; color: #111;">香るMONIN クラフトソーダ</h3>
+          <p style="margin-top: 8px; font-size: 12px; color: #555; line-height: 1.5; font-weight: bold; color: #d4af37;">
+            フルーツの香りが広がるご褒美チルソーダ。
+          </p>
+          <p style="margin-top: 4px; font-size: 12px; color: #666; line-height: 1.5;">
+            ストロベリー、柚子ジンジャー、マンゴーオレンジ。
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- クーポン画面 -->
+  <div id="coupon-page" class="page">
+    <div class="page-header">
+      <h2>ご利用可能クーポン</h2>
+    </div>
+    <div class="page-content">
+      <div class="coupon-container">
+        <div class="coupon-card">
+          <div class="coupon-body">
+            <div class="coupon-title">【ウエルカム特典】休憩500円OFFクーポン</div>
+            <div class="coupon-desc">全日の休憩ご利用時に500円引きいたします。他の割引券との併用はできません。</div>
+          </div>
+          <div class="coupon-footer">
+            <span style="font-size: 11px; color: #999;">有効期限: 2026年9月30日まで</span>
+            <button class="use-btn" onclick="alert('クーポンを使用しました')">使用する</button>
+          </div>
+        </div>
+        <div class="coupon-card" style="border-left-color: #718096;">
+          <div class="coupon-body">
+            <div class="coupon-title">【ランクアップ記念】限定ドリンク1杯無料</div>
+            <div class="coupon-desc">お部屋の端末、またはフロントにてご注文の際にご提示ください。お好きなドリンクをサービス。</div>
+          </div>
+          <div class="coupon-footer">
+            <span style="font-size: 11px; color: #999;">有効期限: ご利用当日限り</span>
+            <button class="use-btn" onclick="alert('クーポンを使用しました')">使用する</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 下部メニューバー -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchPage('home-page')">ホーム</div>
+    <div class="nav-item" onclick="switchPage('card-page')">会員証</div>
+    <div class="nav-item" onclick="switchPage('event-page')">イベント</div>
+    <div class="nav-item" onclick="switchPage('coupon-page')">クーポン</div>
+  </nav>
+
+  <!-- スクリプト処理 -->
+  <script>
+    let currentPoints = 0;
+    let currentRank = 'bronze';
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error:', err));
+    }
+
+    // イベントカードクリック時のリンク処理
+    function openEventLink() {
+      window.open('https://www.hotel-fine.co.jp/food-drink/upfile/hiyashimen.jpg', '_blank', 'noopener,noreferrer');
+    }
+
+    function switchPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+        page.style.display = 'none';
+      });
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+      const targetPage = document.getElementById(pageId);
+      if (targetPage) {
+        targetPage.classList.add('active');
+        targetPage.style.display = 'flex';
+      }
+
+      const clickedNav = Array.from(document.querySelectorAll('.nav-item')).find(item => item.getAttribute('onclick').includes(pageId));
+      if (clickedNav) clickedNav.classList.add('active');
+    }
+
+    function addPoint(type) {
+      let pointsToAdd = 0;
+      if (currentRank === 'bronze') {
+        pointsToAdd = 1;
+      } else {
+        pointsToAdd = (type === 'stay') ? 2 : 1;
+      }
+
+      currentPoints += pointsToAdd;
+      document.getElementById('current-pts').innerText = currentPoints;
+
+      let newRank = 'bronze';
+      if (currentPoints >= 30) {
+        newRank = 'platinum';
+      } else if (currentPoints >= 15) {
+        newRank = 'gold';
+      } else if (currentPoints >= 5) {
+        newRank = 'silver';
+      }
+
+      if (newRank !== currentRank) {
+        currentRank = newRank;
+        updateCardUI();
+      }
+    }
+
+    function updateCardUI() {
+      const card = document.getElementById('member-card-element');
+      const homeCard = document.getElementById('home-card-element');
+      const rankText = document.getElementById('card-rank-text');
+      const homeRankText = document.getElementById('home-card-rank-text');
+      
+      const cardList = [card, homeCard];
+      cardList.forEach(c => {
+        if(c) c.classList.remove('card-bronze', 'card-silver', 'card-gold', 'card-platinum');
+      });
+      
+      let rankString = 'RANK: BRONZE';
+      let className = 'card-bronze';
+
+      if (currentRank === 'silver') {
+        className = 'card-silver';
+        rankString = 'RANK: SILVER';
+      } else if (currentRank === 'gold') {
+        className = 'card-gold';
+        rankString = 'RANK: GOLD';
+      } else if (currentRank === 'platinum') {
+        className = 'card-platinum';
+        rankString = 'RANK: PLATINUM';
+      }
+
+      cardList.forEach(c => { if(c) c.classList.add(className); });
+      if(rankText) rankText.innerText = rankString;
+      if(homeRankText) homeRankText.innerText = rankString;
+    }
+  </script>
+
+</body>
+</html>
