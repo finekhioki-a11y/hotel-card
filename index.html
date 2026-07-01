@@ -192,7 +192,7 @@
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      cursor: pointer; /* マウスが乗った時にポインタにする */
+      cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     /* タップした時に少し沈む演出 */
@@ -274,9 +274,7 @@
       <div class="home-card-wrapper">
         <div id="home-card-element" class="membership-card card-bronze">
           <div style="font-size: 16px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
-          <div id="home-card-rank-text" class="card-sub-text" style="margin-top: 35px; font-size: 13px; color: #ccc;">RANK: BRONZE</div>
-          <div style="margin-top: 5px; font-size: 18px; letter-spacing: 1px;">TAROU TANAKA</div>
-          <div id="home-card-no-text" class="card-sub-text" style="position: absolute; bottom: 20px; right: 20px; font-size: 11px; color: #aaa;">No. 1234-5678</div>
+          <!-- 不要なデモテキスト（名前・番号・ランク）を削除しました -->
         </div>
       </div>
 
@@ -294,9 +292,7 @@
     <div class="page-content center-content">
       <div id="member-card-element" class="membership-card card-bronze" style="margin-top: 10px;">
         <div style="font-size: 16px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
-        <div id="card-rank-text" class="card-sub-text" style="margin-top: 35px; font-size: 13px; color: #ccc;">RANK: BRONZE</div>
-        <div style="margin-top: 5px; font-size: 18px; letter-spacing: 1px;">TAROU TANAKA</div>
-        <div id="card-no-text" class="card-sub-text" style="position: absolute; bottom: 20px; right: 20px; font-size: 11px; color: #aaa;">No. 1234-5678</div>
+        <!-- 不要なデモテキスト（名前・番号・ランク）を削除しました -->
       </div>
 
       <div class="point-panel">
@@ -320,7 +316,7 @@
     </div>
     <div class="page-content">
       
-      <!-- イベント1: 冷やし麺 (JSでリンク処理) -->
+      <!-- イベント1: 冷やし麺 -->
       <div class="event-card" onclick="openEventLink()">
         <div class="event-img" style="background-image: url('hiyashimen2026.jpg');"></div>
         <div class="event-detail">
@@ -331,7 +327,7 @@
         </div>
       </div>
 
-      <!-- イベント2: MONIN クラフトソーダ (JSでリンク処理) -->
+      <!-- イベント2: MONIN クラフトソーダ -->
       <div class="event-card" onclick="openEventLink()">
         <div class="event-img" style="background-image: url('monan_craftsoda.jpg');"></div>
         <div class="event-detail">
@@ -447,31 +443,23 @@
     function updateCardUI() {
       const card = document.getElementById('member-card-element');
       const homeCard = document.getElementById('home-card-element');
-      const rankText = document.getElementById('card-rank-text');
-      const homeRankText = document.getElementById('home-card-rank-text');
       
       const cardList = [card, homeCard];
       cardList.forEach(c => {
         if(c) c.classList.remove('card-bronze', 'card-silver', 'card-gold', 'card-platinum');
       });
       
-      let rankString = 'RANK: BRONZE';
       let className = 'card-bronze';
 
       if (currentRank === 'silver') {
         className = 'card-silver';
-        rankString = 'RANK: SILVER';
       } else if (currentRank === 'gold') {
         className = 'card-gold';
-        rankString = 'RANK: GOLD';
       } else if (currentRank === 'platinum') {
         className = 'card-platinum';
-        rankString = 'RANK: PLATINUM';
       }
 
       cardList.forEach(c => { if(c) c.classList.add(className); });
-      if(rankText) rankText.innerText = rankString;
-      if(homeRankText) homeRankText.innerText = rankString;
     }
   </script>
 
