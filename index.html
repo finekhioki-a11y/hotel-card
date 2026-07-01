@@ -18,11 +18,18 @@
       padding-bottom: 70px; /* 下部メニューバーのスペースを確保 */
     }
 
+    /* --- 【重要】ページ切り替え用の制御スタイル --- */
+    .page {
+      display: none; /* 初期状態はすべて非表示 */
+    }
+    .page.active {
+      display: block; /* active クラスがついたページだけを表示 */
+    }
+
     /* --- ホーム画面：トップ画像エリア --- */
     .hero-section {
       width: 100%;
-      height: 220px; /* 推奨サイズ 800x440 の比率を意識 */
-      /* 黒いフィルター(linear-gradient)を撤去し、画像のみに修正 */
+      height: 220px;
       background-image: url('main_img01.jpg');
       background-size: cover;
       background-position: center;
@@ -39,8 +46,7 @@
     }
     .event-img {
       width: 100%;
-      height: 200px; /* 推奨サイズ 800x400 の比率 */
-      /* 夏季限定「夏の冷やし麺フェア」仮画像（Unsplash） */
+      height: 200px;
       background-image: url('https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80');
       background-size: cover;
       background-position: center;
@@ -79,7 +85,7 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      z-index: 1000; /* 最前面に配置 */
+      z-index: 1000;
     }
     .nav-item {
       flex: 1;
@@ -90,4 +96,71 @@
       cursor: pointer;
     }
     .nav-item.active {
-      color: #d
+      color: #d4af37; /* ゴールド */
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="home-page" class="page active">
+    <div class="hero-section"></div>
+    <div style="padding: 20px;">
+      <h2>ようこそ、ファインメンバーズへ</h2>
+      <p style="margin-top: 8px; color: #666; font-size: 14px;">快適なご滞在をサポートいたします。</p>
+    </div>
+  </div>
+
+  <div id="card-page" class="page card-section">
+    <div class="membership-card">
+      <div style="font-size: 18px; letter-spacing: 2px;">HOTEL MEMBERS</div>
+      <div style="margin-top: 40px; font-size: 14px; color: #ccc;">RANK: GOLD</div>
+      <div style="margin-top: 5px; font-size: 20px; letter-spacing: 1px;">TAROU TANAKA</div>
+      <div style="position: absolute; bottom: 20px; right: 20px; font-size: 12px; color: #aaa;">No. 1234-5678</div>
+    </div>
+  </div>
+
+  <div id="event-page" class="page">
+    <div class="event-card">
+      <div class="event-img"></div>
+      <div class="event-detail">
+        <h3 style="font-size: 16px;">夏季限定：夏の冷やし麺フェア</h3>
+        <p style="margin-top: 5px; font-size: 13px; color: #666;">
+          贅沢な食材を使用した、涼やかな限定メニューを是非ご堪能ください。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchPage('home-page')">ホーム</div>
+    <div class="nav-item" onclick="switchPage('card-page')">会員証</div>
+    <div class="nav-item" onclick="switchPage('event-page')">イベント</div>
+  </nav>
+
+  <script>
+    function switchPage(pageId) {
+      // すべてのページをいったん非表示にする
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(page => page.classList.remove('active'));
+
+      // すべてのメニューの選択状態（ゴールド色）を解除する
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => item.classList.remove('active'));
+
+      // クリックされたターゲットのページを表示する
+      const targetPage = document.getElementById(pageId);
+      if (targetPage) {
+        targetPage.classList.add('active');
+      }
+
+      // クリックされたメニューボタンをハイライトする
+      const clickedNav = Array.from(navItems).find(item => item.getAttribute('onclick').includes(pageId));
+      if (clickedNav) {
+        clickedNav.classList.add('active');
+      }
+    }
+  </script>
+
+</body>
+</html>
