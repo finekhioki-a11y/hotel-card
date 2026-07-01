@@ -1,23 +1,21 @@
 {
-  "short_name": "ファインメンバーズ",
-  "name": "ホテルファイン 会員証アプリ",
+  "name": "ホテルファインメンバーズ",
+  "short_name": "ホテルファイン",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background-color": "#111111",
+  "theme_color": "#111111",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "icon.png",
-      "type": "image/png",
       "sizes": "192x192",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "icon.png",
-      "type": "image/png",
       "sizes": "512x512",
-      "purpose": "maskable"
+      "type": "image/png"
     }
-  ],
-  "start_url": "index.html",
-  "background_color": "#111111",
-  "theme-color": "#111111",
-  "display": "standalone",
-  "orientation": "portrait"
+  ]
 }
