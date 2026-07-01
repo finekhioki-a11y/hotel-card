@@ -15,28 +15,42 @@
       font-family: 'Helvetica Neue', Arial, sans-serif;
       background-color: #f5f5f5;
       color: #333;
-      padding-bottom: 70px; /* 下部メニューバーのスペースを確保 */
+      padding-bottom: 70px;
     }
 
-    /* --- 【重要】ページ切り替え用の制御スタイル --- */
+    /* --- ページ切り替え用の制御スタイル --- */
     .page {
-      display: none; /* 初期状態はすべて非表示 */
+      display: none;
     }
     .page.active {
-      display: block; /* active クラスがついたページだけを表示 */
+      display: block;
     }
 
     /* --- ホーム画面：トップ画像エリア --- */
     .hero-section {
       width: 100%;
       height: 220px;
+      /* 【修正】ファイル名を main_img01.jpg に修正（フィルターなし） */
       background-image: url('main_img01.jpg');
       background-size: cover;
       background-position: center;
       position: relative;
     }
 
-    /* --- イベント画面（仮画像エリア） --- */
+    /* 【新設】ホテルロゴ用スタイル */
+    .hotel-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 20px 5px 20px;
+    }
+    .hotel-logo {
+      width: 40px;  /* ロゴのサイズ（適宜調整してください） */
+      height: 40px;
+      object-fit: contain;
+    }
+
+    /* --- イベント画面 --- */
     .event-card {
       background: #fff;
       margin: 15px;
@@ -55,25 +69,70 @@
       padding: 15px;
     }
 
-    /* --- 会員証エリア（縦画面固定デザイン） --- */
+    /* --- 会員証エリア --- */
     .card-section {
       padding: 20px;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
     }
     .membership-card {
       width: 100%;
       max-width: 350px;
       height: 210px;
-      background: linear-gradient(135deg, #111 0%, #444 100%);
       color: #fff;
       border-radius: 12px;
       padding: 20px;
       position: relative;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.5s ease, color 0.5s ease;
     }
 
-    /* --- 常時表示の下部メニューバー --- */
+    /* --- 【修正】カードのファイル名を正しい指定に変更 --- */
+    .card-bronze {
+      background-image: url('bronze.png');
+    }
+    .card-silver {
+      background-image: url('silver.png');
+      color: #333 !important; /* シルバー画像に合わせて文字を暗めに */
+    }
+    .card-silver .card-sub-text { color: #555 !important; }
+
+    .card-gold {
+      background-image: url('gold.png');
+    }
+    .card-platinum {
+      background-image: url('platinum.png');
+      color: #fff;
+    }
+
+    /* デモ用：ポイント追加パネル */
+    .point-panel {
+      margin-top: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 350px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      background-color: #333;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn:active { opacity: 0.8; }
+
+    /* --- 下部メニューバー --- */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -96,7 +155,7 @@
       cursor: pointer;
     }
     .nav-item.active {
-      color: #d4af37; /* ゴールド */
+      color: #d4af37;
       font-weight: bold;
     }
   </style>
@@ -105,18 +164,34 @@
 
   <div id="home-page" class="page active">
     <div class="hero-section"></div>
-    <div style="padding: 20px;">
-      <h2>ようこそ、ファインメンバーズへ</h2>
-      <p style="margin-top: 8px; color: #666; font-size: 14px;">快適なご滞在をサポートいたします。</p>
+    
+    <div class="hotel-logo-area">
+      <img src="icon.png" alt="ホテルロゴ" class="hotel-logo">
+      <h2>ファインメンバーズへ</h2>
+    </div>
+    <div style="padding: 0 20px 20px 20px;">
+      <p style="color: #666; font-size: 14px;">快適なご滞在をサポートいたします。</p>
     </div>
   </div>
 
   <div id="card-page" class="page card-section">
-    <div class="membership-card">
-      <div style="font-size: 18px; letter-spacing: 2px;">HOTEL MEMBERS</div>
-      <div style="margin-top: 40px; font-size: 14px; color: #ccc;">RANK: GOLD</div>
+    <div id="member-card-element" class="membership-card card-bronze">
+      <div style="font-size: 18px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
+      <div id="card-rank-text" class="card-sub-text" style="margin-top: 40px; font-size: 14px; color: #ccc;">RANK: BRONZE</div>
       <div style="margin-top: 5px; font-size: 20px; letter-spacing: 1px;">TAROU TANAKA</div>
-      <div style="position: absolute; bottom: 20px; right: 20px; font-size: 12px; color: #aaa;">No. 1234-5678</div>
+      <div id="card-no-text" class="card-sub-text" style="position: absolute; bottom: 20px; right: 20px; font-size: 12px; color: #aaa;">No. 1234-5678</div>
+    </div>
+
+    <div class="point-panel">
+      <p style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">
+        現在の保有ポイント: <span id="current-pts" style="color: #d4af37; font-size: 18px;">0</span> pt
+      </p>
+      <button class="btn" onclick="addPoint('rest')">休憩を利用</button>
+      <button class="btn" onclick="addPoint('stay')">宿泊を利用</button>
+      <p style="font-size: 11px; color: #999; margin-top: 10px;">
+        ※ブロンズ: 休憩1/宿泊1 | シルバー以上: 休憩1/宿泊2<br>
+        (デモ判定閾値: 5ptで銀 / 15ptで金 / 30ptで白金)
+      </p>
     </div>
   </div>
 
@@ -139,25 +214,64 @@
   </nav>
 
   <script>
+    let currentPoints = 0;
+    let currentRank = 'bronze';
+
     function switchPage(pageId) {
-      // すべてのページをいったん非表示にする
-      const pages = document.querySelectorAll('.page');
-      pages.forEach(page => page.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
 
-      // すべてのメニューの選択状態（ゴールド色）を解除する
-      const navItems = document.querySelectorAll('.nav-item');
-      navItems.forEach(item => item.classList.remove('active'));
-
-      // クリックされたターゲットのページを表示する
       const targetPage = document.getElementById(pageId);
-      if (targetPage) {
-        targetPage.classList.add('active');
+      if (targetPage) targetPage.classList.add('active');
+
+      const clickedNav = Array.from(document.querySelectorAll('.nav-item')).find(item => item.getAttribute('onclick').includes(pageId));
+      if (clickedNav) clickedNav.classList.add('active');
+    }
+
+    function addPoint(type) {
+      let pointsToAdd = 0;
+      if (currentRank === 'bronze') {
+        pointsToAdd = 1;
+      } else {
+        pointsToAdd = (type === 'stay') ? 2 : 1;
       }
 
-      // クリックされたメニューボタンをハイライトする
-      const clickedNav = Array.from(navItems).find(item => item.getAttribute('onclick').includes(pageId));
-      if (clickedNav) {
-        clickedNav.classList.add('active');
+      currentPoints += pointsToAdd;
+      document.getElementById('current-pts').innerText = currentPoints;
+
+      let newRank = 'bronze';
+      if (currentPoints >= 30) {
+        newRank = 'platinum';
+      } else if (currentPoints >= 15) {
+        newRank = 'gold';
+      } else if (currentPoints >= 5) {
+        newRank = 'silver';
+      }
+
+      if (newRank !== currentRank) {
+        currentRank = newRank;
+        updateCardUI();
+      }
+    }
+
+    function updateCardUI() {
+      const card = document.getElementById('member-card-element');
+      const rankText = document.getElementById('card-rank-text');
+      
+      card.classList.remove('card-bronze', 'card-silver', 'card-gold', 'card-platinum');
+      
+      if (currentRank === 'bronze') {
+        card.classList.add('card-bronze');
+        rankText.innerText = 'RANK: BRONZE';
+      } else if (currentRank === 'silver') {
+        card.classList.add('card-silver');
+        rankText.innerText = 'RANK: SILVER';
+      } else if (currentRank === 'gold') {
+        card.classList.add('card-gold');
+        rankText.innerText = 'RANK: GOLD';
+      } else if (currentRank === 'platinum') {
+        card.classList.add('card-platinum');
+        rankText.innerText = 'RANK: PLATINUM';
       }
     }
   </script>
