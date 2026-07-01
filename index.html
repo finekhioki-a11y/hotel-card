@@ -12,11 +12,10 @@
       padding: 0;
     }
     
-    /* 【超重要】スマホのブラウザ特有のバーの伸び縮みに影響されないための対策 */
     html, body {
       height: 100%;
-      height: 100dvh; /* 動的ビューポート（dvh）を使い、メニューを強制的に画面内に収める */
-      overflow: hidden; /* 親要素での不要なスクロールを禁止 */
+      height: 100dvh;
+      overflow: hidden;
     }
 
     body {
@@ -27,11 +26,11 @@
       flex-direction: column;
     }
 
-    /* 各画面の中身をスクロール可能にし、メニューを押し出さないようにする */
+    /* 各画面のスクロール領域 */
     .page {
       display: none;
       flex: 1;
-      overflow-y: auto; /* コンテンツが多い場合はページ内だけでスクロール */
+      overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding-bottom: 20px;
     }
@@ -39,8 +38,11 @@
       display: block;
     }
 
-    /* 会員証画面だけレイアウトの都合上 flex にする */
-    .page.card-section.active {
+    /* レイアウト調整用クラス */
+    .page.flex-center {
+      display: none;
+    }
+    .page.flex-center.active {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -49,11 +51,10 @@
     /* --- ホーム画面：トップ画像エリア --- */
     .hero-section {
       width: 100%;
-      height: 220px;
+      height: 180px;
       background-image: url('main_img01.jpg');
       background-size: cover;
       background-position: center;
-      position: relative;
     }
 
     /* ホテルロゴ用スタイル */
@@ -61,47 +62,33 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 20px 20px 5px 20px;
+      padding: 15px 20px 5px 20px;
     }
     .hotel-logo {
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       object-fit: contain;
     }
 
-    /* --- イベント画面 --- */
-    .event-card {
-      background: #fff;
-      margin: 15px;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .event-img {
-      width: 100%;
-      height: 200px;
-      background-image: url('hiyashimen2026.jpg');
-      background-size: cover;
-      background-position: center;
-    }
-    .event-detail {
-      padding: 15px;
-    }
-
-    /* --- 会員証エリア --- */
+    /* --- 会員証（共通カードデザイン） --- */
     .membership-card {
-      width: 100%;
+      width: 90%;
       max-width: 350px;
-      height: 210px;
+      height: 200px;
       color: #fff;
       border-radius: 12px;
       padding: 20px;
       position: relative;
-      margin-top: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       background-size: cover;
       background-position: center;
       transition: background-image 0.5s ease, color 0.5s ease;
+    }
+    /* ホーム画面用のミニカード調整 */
+    .home-card-wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
     }
 
     /* カードのファイル名 */
@@ -114,13 +101,78 @@
     .card-gold { background-image: url('gold.png'); }
     .card-platinum { background-image: url('platinum.png'); color: #fff; }
 
+    /* --- クーポン画面スタイル --- */
+    .coupon-container {
+      padding: 15px;
+    }
+    .coupon-card {
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-left: 5px solid #d4af37; /* 左端にゴールドのアクセント */
+      display: flex;
+      flex-direction: column;
+    }
+    .coupon-body {
+      padding: 15px;
+    }
+    .coupon-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #111;
+    }
+    .coupon-desc {
+      font-size: 13px;
+      color: #666;
+      margin-top: 5px;
+    }
+    .coupon-footer {
+      background: #fafafa;
+      padding: 10px 15px;
+      border-top: 1px dashed #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .use-btn {
+      background: #333;
+      color: #fff;
+      border: none;
+      padding: 6px 15px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* --- イベント画面 --- */
+    .event-card {
+      background: #fff;
+      margin: 15px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .event-img {
+      width: 100%;
+      height: 180px;
+      background-image: url('hiyashimen2026.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .event-detail {
+      padding: 15px;
+    }
+
     /* デモ用：ポイント追加パネル */
     .point-panel {
       margin-top: 20px;
       background: #fff;
       padding: 15px;
       border-radius: 8px;
-      width: 100%;
+      width: 90%;
       max-width: 350px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       text-align: center;
@@ -137,7 +189,7 @@
       font-weight: bold;
     }
 
-    /* --- 【対策】絶対に画面最下部に居座るメニューバー --- */
+    /* --- 下部メニューバー（4項目に変更） --- */
     .bottom-nav {
       height: 65px;
       background-color: #ffffff;
@@ -145,13 +197,13 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      padding-bottom: env(safe-area-inset-bottom); /* iPhoneの画面下のバー対策 */
+      padding-bottom: env(safe-area-inset-bottom);
       width: 100%;
     }
     .nav-item {
       flex: 1;
       text-align: center;
-      font-size: 12px;
+      font-size: 11px;
       color: #666;
       text-decoration: none;
       cursor: pointer;
@@ -165,25 +217,39 @@
 </head>
 <body>
 
+  <!-- ホーム画面 -->
   <div id="home-page" class="page active">
     <div class="hero-section"></div>
     <div class="hotel-logo-area">
       <img src="icon.png" alt="ホテルロゴ" class="hotel-logo">
-      <h2>ファインメンバーズへ</h2>
+      <h2>ファインメンバーズ</h2>
     </div>
-    <div style="padding: 0 20px 20px 20px;">
-      <p style="color: #666; font-size: 14px;">快適なご滞在をサポートいたします。</p>
+    
+    <!-- 【新設】ホーム画面にも配置した連動メンバーズカード -->
+    <div class="home-card-wrapper">
+      <div id="home-card-element" class="membership-card card-bronze">
+        <div style="font-size: 16px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
+        <div id="home-card-rank-text" class="card-sub-text" style="margin-top: 35px; font-size: 13px; color: #ccc;">RANK: BRONZE</div>
+        <div style="margin-top: 5px; font-size: 18px; letter-spacing: 1px;">TAROU TANAKA</div>
+        <div id="home-card-no-text" class="card-sub-text" style="position: absolute; bottom: 20px; right: 20px; font-size: 11px; color: #aaa;">No. 1234-5678</div>
+      </div>
+    </div>
+
+    <div style="padding: 10px 20px; text-align: center;">
+      <p style="color: #666; font-size: 13px;">快適なご滞在をサポートいたします。</p>
     </div>
   </div>
 
-  <div id="card-page" class="page card-section">
+  <!-- 会員証表示画面 -->
+  <div id="card-page" class="page flex-center card-section">
     <div id="member-card-element" class="membership-card card-bronze">
-      <div style="font-size: 18px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
-      <div id="card-rank-text" class="card-sub-text" style="margin-top: 40px; font-size: 14px; color: #ccc;">RANK: BRONZE</div>
-      <div style="margin-top: 5px; font-size: 20px; letter-spacing: 1px;">TAROU TANAKA</div>
-      <div id="card-no-text" class="card-sub-text" style="position: absolute; bottom: 20px; right: 20px; font-size: 12px; color: #aaa;">No. 1234-5678</div>
+      <div style="font-size: 16px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
+      <div id="card-rank-text" class="card-sub-text" style="margin-top: 35px; font-size: 13px; color: #ccc;">RANK: BRONZE</div>
+      <div style="margin-top: 5px; font-size: 18px; letter-spacing: 1px;">TAROU TANAKA</div>
+      <div id="card-no-text" class="card-sub-text" style="position: absolute; bottom: 20px; right: 20px; font-size: 11px; color: #aaa;">No. 1234-5678</div>
     </div>
 
+    <!-- ランクアップ・シミュレーター -->
     <div class="point-panel">
       <p style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">
         現在の保有ポイント: <span id="current-pts" style="color: #d4af37; font-size: 18px;">0</span> pt
@@ -192,29 +258,64 @@
       <button class="btn" onclick="addPoint('stay')">宿泊を利用</button>
       <p style="font-size: 11px; color: #999; margin-top: 10px;">
         ※ブロンズ: 休憩1/宿泊1 | シルバー以上: 休憩1/宿泊2<br>
-        (デモ判定閾値: 5ptで銀 / 15ptで金 / 30ptで白金)
+        (5ptで銀 / 15ptで金 / 30ptで白金)
       </p>
     </div>
   </div>
 
-  <div id="event-page" class="page">
+  <!-- クーポン画面 -->
+  <div id="event-page" class="page"> <!-- idはそのままに中身をイベント用に変更 -->
     <div class="event-card">
       <div class="event-img"></div>
       <div class="event-detail">
-        <h3 style="font-size: 16px; color: #111;">この夏は, ひんやり喉ごし。進化した冷やし麺フェア！</h3>
-        <p style="margin-top: 8px; font-size: 13px; color: #555; line-height: 1.5;">
-          うだるような暑さを吹き飛ばす, 冷たい美味しさが今年は5種類パワーアップ！
+        <h3 style="font-size: 15px; color: #111;">この夏は、ひんやり喉ごし。進化した冷やし麺フェア！</h3>
+        <p style="margin-top: 8px; font-size: 12px; color: #555; line-height: 1.5;">
+          うだるような暑さを吹き飛ばす、冷たい美味しさが今年は5種類パワーアップ！
         </p>
       </div>
     </div>
   </div>
 
+  <!-- 【新設】クーポン画面セクション -->
+  <div id="coupon-page" class="page">
+    <div class="coupon-container">
+      
+      <!-- クーポン1 -->
+      <div class="coupon-card">
+        <div class="coupon-body">
+          <div class="coupon-title">【ウエルカム特典】休憩500円OFFクーポン</div>
+          <div class="coupon-desc">全日の休憩ご利用時に500円引きいたします。他の割引券との併用はできません。</div>
+        </div>
+        <div class="coupon-footer">
+          <span style="font-size: 11px; color: #999;">有効期限: 2026年9月30日まで</span>
+          <button class="use-btn" onclick="alert('クーポンを使用しました')">使用する</button>
+        </div>
+      </div>
+
+      <!-- クーポン2 -->
+      <div class="coupon-card" style="border-left-color: #718096;">
+        <div class="coupon-body">
+          <div class="coupon-title">【ランクアップ記念】限定ドリンク1杯無料</div>
+          <div class="coupon-desc">お部屋の端末、またはフロントにてご注文の際にご提示ください。お好きなドリンクをサービス。</div>
+        </div>
+        <div class="coupon-footer">
+          <span style="font-size: 11px; color: #999;">有効期限: ご利用当日限り</span>
+          <button class="use-btn" onclick="alert('クーポンを使用しました')">使用する</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 下部メニューバー（4項目） -->
   <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchPage('home-page')">ホーム</div>
     <div class="nav-item" onclick="switchPage('card-page')">会員証</div>
     <div class="nav-item" onclick="switchPage('event-page')">イベント</div>
+    <div class="nav-item" onclick="switchPage('coupon-page')">クーポン</div>
   </nav>
 
+  <!-- スクリプト処理 -->
   <script>
     let currentPoints = 0;
     let currentRank = 'bronze';
@@ -226,6 +327,7 @@
       const targetPage = document.getElementById(pageId);
       if (targetPage) targetPage.classList.add('active');
 
+      // ターゲットメニューのハイライト処理
       const clickedNav = Array.from(document.querySelectorAll('.nav-item')).find(item => item.getAttribute('onclick').includes(pageId));
       if (clickedNav) clickedNav.classList.add('active');
     }
@@ -256,25 +358,37 @@
       }
     }
 
+    // 会員証とホーム画面、両方のカードを同時に更新する
     function updateCardUI() {
       const card = document.getElementById('member-card-element');
+      const homeCard = document.getElementById('home-card-element');
       const rankText = document.getElementById('card-rank-text');
+      const homeRankText = document.getElementById('home-card-rank-text');
       
-      card.classList.remove('card-bronze', 'card-silver', 'card-gold', 'card-platinum');
+      // クラス初期化
+      const cardList = [card, homeCard];
+      cardList.forEach(c => {
+        if(c) c.classList.remove('card-bronze', 'card-silver', 'card-gold', 'card-platinum');
+      });
       
-      if (currentRank === 'bronze') {
-        card.classList.add('card-bronze');
-        rankText.innerText = 'RANK: BRONZE';
-      } else if (currentRank === 'silver') {
-        card.classList.add('card-silver');
-        rankText.innerText = 'RANK: SILVER';
+      // ランクの適用
+      let rankString = 'RANK: BRONZE';
+      let className = 'card-bronze';
+
+      if (currentRank === 'silver') {
+        className = 'card-silver';
+        rankString = 'RANK: SILVER';
       } else if (currentRank === 'gold') {
-        card.classList.add('card-gold');
-        rankText.innerText = 'RANK: GOLD';
+        className = 'card-gold';
+        rankString = 'RANK: GOLD';
       } else if (currentRank === 'platinum') {
-        card.classList.add('card-platinum');
-        rankText.innerText = 'RANK: PLATINUM';
+        className = 'card-platinum';
+        rankString = 'RANK: PLATINUM';
       }
+
+      cardList.forEach(c => { if(c) c.classList.add(className); });
+      if(rankText) rankText.innerText = rankString;
+      if(homeRankText) homeRankText.innerText = rankString;
     }
   </script>
 
