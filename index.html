@@ -2,211 +2,462 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>ホテルファインメンバーズ</title>
+  
   <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#111111">
+  
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ホテルファイン">
+
   <style>
-    body {
-      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    /* --- 基本リセット ＆ 全体スタイル --- */
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background-color: #f7f7f7;
+    }
+    
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f5f5;
       color: #333;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 各画面全体の枠 */
+    .page {
+      display: none;
+      flex: 1;
+      height: calc(100dvh - 65px);
+      overflow: hidden;
+    }
+    .page.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 画面上部：ヘッダータイトルエリア */
+    .page-header {
+      width: 100%;
+      padding: 25px 20px 10px 20px;
+      text-align: center;
+      background-color: #f5f5f5;
+      flex-shrink: 0;
+    }
+    .page-header h2 {
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: #222;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+    .page-header h2::after {
+      content: '';
+      position: absolute;
+      left: 20%;
+      bottom: 0;
+      width: 60%;
+      height: 2px;
+      background: #d4af37;
+    }
+
+    /* 画面の中身（コンテンツ部分）スクロール設定 */
+    .page-content {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 30px;
+      width: 100%;
+    }
+    .center-content {
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
     }
 
-    /* ヘッダー */
-    header {
+    /* --- ホーム画面：トップ画像エリア --- */
+    .hero-section {
       width: 100%;
-      background-color: #1a1a1a;
+      height: 180px;
+      background-image: url('main_img01.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hotel-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 20px 5px 20px;
+    }
+    .hotel-logo {
+      width: 35px;
+      height: 35px;
+      object-fit: contain;
+    }
+
+    /* --- 会員証（共通カードデザイン） --- */
+    .membership-card {
+      width: 90%;
+      max-width: 350px;
+      height: 200px;
       color: #fff;
-      text-align: center;
-      padding: 15px 0;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-    header h1 {
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: 1px;
-    }
-
-    /* メインコンテンツ容器 */
-    .container {
-      width: 100%;
-      max-width: 400px;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    /* メンバーズカード (ゴールド基調デモ) */
-    .card {
-      background: linear-gradient(135deg, #bd9354 0%, #e6caa3 50%, #bd9354 100%);
-      border-radius: 15px;
+      border-radius: 12px;
       padding: 20px;
       position: relative;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.5s ease, color 0.5s ease;
+    }
+    .home-card-wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+    }
+
+    /* カードのファイル名 */
+    .card-bronze { background-image: url('bronze.png'); }
+    .card-silver {
+      background-image: url('silver.png');
+      color: #333 !important;
+    }
+    .card-silver .card-sub-text { color: #555 !important; }
+    .card-gold { background-image: url('gold.png'); }
+    .card-platinum { background-image: url('platinum.png'); color: #fff; }
+
+    /* --- クーポン画面スタイル --- */
+    .coupon-container {
+      padding: 5px 15px 15px 15px;
+    }
+    .coupon-card {
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 15px;
       overflow: hidden;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-      margin-bottom: 25px;
-      aspect-ratio: 1.586 / 1; /* クレジットカードの比率 */
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-left: 5px solid #d4af37;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      color: #fff;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
-    .card-title {
+    .coupon-body {
+      padding: 15px;
+    }
+    .coupon-title {
       font-size: 16px;
       font-weight: bold;
-      letter-spacing: 1.5px;
+      color: #111;
     }
-    .card-chip {
-      width: 40px;
-      height: 30px;
-      background: linear-gradient(135deg, #ccc 0%, #fff 50%, #ccc 100%);
-      border-radius: 4px;
-      margin-top: 10px;
-    }
-    .card-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-    .card-number {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 18px;
-      letter-spacing: 2px;
-    }
-    .card-logo {
-      font-size: 12px;
-      font-weight: bold;
-      border: 1px solid #fff;
-      padding: 2px 6px;
-      border-radius: 3px;
-    }
-
-    /* マイ店舗表示セクション */
-    .mystore-section {
-      background-color: #fff;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .mystore-label {
-      font-size: 12px;
-      color: #888;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-      font-weight: bold;
-    }
-    .mystore-name {
-      font-size: 18px;
-      color: #1a1a1a;
-      margin: 0;
-      font-weight: bold;
-    }
-
-    /* 店舗選択セレクトボックス */
-    .select-section {
-      text-align: center;
-      width: 100%;
-    }
-    .select-label {
+    .coupon-desc {
       font-size: 13px;
       color: #666;
-      display: block;
-      margin-bottom: 8px;
+      margin-top: 5px;
     }
-    .store-select {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #ccc;
+    .coupon-footer {
+      background: #fafafa;
+      padding: 10px 15px;
+      border-top: 1px dashed #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .use-btn {
+      background: #333;
+      color: #fff;
+      border: none;
+      padding: 6px 15px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* --- イベント画面スタイル --- */
+    .event-card {
+      background: #fff;
+      margin: 10px 15px 20px 15px;
       border-radius: 8px;
-      background-color: #fff;
-      color: #333;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      outline: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path d='M0 3l5 5 5-5z' fill='%23666'/></svg>");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .store-select:focus {
-      border-color: #bd9354;
+    .event-card:active {
+      transform: scale(0.98);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .event-img {
+      width: 100%;
+      height: 180px;
+      background-size: cover;
+      background-position: center;
+    }
+    .event-detail {
+      padding: 15px;
+    }
+
+    /* デモ用：ポイント追加パネル */
+    .point-panel {
+      margin-top: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 350px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      background-color: #333;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* --- 下部メニューバー --- */
+    .bottom-nav {
+      height: 65px;
+      background-color: #ffffff;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding-bottom: env(safe-area-inset-bottom);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      color: #666;
+      text-decoration: none;
+      cursor: pointer;
+      padding: 10px 0;
+    }
+    .nav-item.active {
+      color: #d4af37;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>ホテルファインメンバーズ</h1>
-  </header>
-
-  <div class="container">
-    <div class="card">
-      <div class="card-title">FINE MEMBERS CARD</div>
-      <div class="card-chip"></div>
-      <div class="card-bottom">
-        <div class="card-number">•••• •••• •••• ••••</div>
-        <div class="card-logo">FINE</div>
+  <!-- ホーム画面 -->
+  <div id="home-page" class="page active">
+    <div class="page-content">
+      <div class="hero-section"></div>
+      <div class="hotel-logo-area">
+        <img src="icon.png" alt="ホテルロゴ" class="hotel-logo">
+        <h2>ホテルファイン</h2>
       </div>
-    </div>
+      
+      <div class="home-card-wrapper">
+        <div id="home-card-element" class="membership-card card-bronze">
+          <div style="font-size: 16px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
+        </div>
+      </div>
 
-    <div class="mystore-section">
-      <div class="mystore-label">マイ店舗</div>
-      <h3 id="selected-store-name" class="mystore-name">未設定</h3>
-    </div>
-
-    <div class="select-section">
-      <label for="store-select" class="select-label">お気に入り店舗を選択・変更</label>
-      <select id="store-select" class="store-select">
-        <option value="">-- 店舗を選択してください --</option>
-        <option value="ホテルファイン梅田店">ホテルファイン梅田店</option>
-        <option value="ホテルファイン難波店">ホテルファイン難波店</option>
-        <option value="ホテルファイン京都南店">ホテルファイン京都南店</option>
-        <option value="ホテルファイン神戸新開地店">ホテルファイン神戸新開地店</option>
-        <option value="ホテルファイン堺店">ホテルファイン堺店</option>
-      </select>
+      <div style="padding: 10px 20px; text-align: center;">
+        <p style="color: #666; font-size: 13px;">快適なご滞在をサポートいたします。</p>
+      </div>
     </div>
   </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const storeSelect = document.getElementById("store-select");
-      const storeNameDisplay = document.getElementById("selected-store-name");
+  <!-- 会員証表示画面 -->
+  <div id="card-page" class="page">
+    <div class="page-header">
+      <h2>デジタル会員証</h2>
+    </div>
+    <div class="page-content center-content">
+      <div id="member-card-element" class="membership-card card-bronze" style="margin-top: 10px;">
+        <div style="font-size: 16px; letter-spacing: 2px; font-weight: bold;">FINE MEMBERS</div>
+      </div>
 
-      // 1. スマホの保存領域(localStorage)からデータを読み込んで表示
-      const savedStore = localStorage.getItem("myFavoriteStore");
-      if (savedStore) {
-        storeNameDisplay.textContent = savedStore;
-        storeSelect.value = savedStore;
-      } else {
-        storeNameDisplay.textContent = "未設定";
+      <div class="point-panel">
+        <p style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">
+          現在の保有ポイント: <span id="current-pts" style="color: #d4af37; font-size: 18px;">0</span> pt
+        </p>
+        <button class="btn" onclick="addPoint('rest')">休憩を利用</button>
+        <button class="btn" onclick="addPoint('stay')">宿泊を利用</button>
+        <p style="font-size: 11px; color: #999; margin-top: 10px;">
+          ※ブロンズ: 休憩1/宿泊1 | シルバー以上: 休憩1/宿泊2<br>
+          (5ptで銀 / 15ptで金 / 30ptで白金)
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- イベント画面 -->
+  <div id="event-page" class="page">
+    <div class="page-header">
+      <h2>イベント情報</h2>
+    </div>
+    <div class="page-content">
+      
+      <!-- イベント1: 冷やし麺 -->
+      <div class="event-card" onclick="openEventLink()">
+        <div class="event-img" style="background-image: url('hiyashimen2026.jpg');"></div>
+        <div class="event-detail">
+          <h3 style="font-size: 15px; color: #111;">この夏は、ひんやり喉ごし。進化した冷やし麺フェア！</h3>
+          <p style="margin-top: 8px; font-size: 12px; color: #555; line-height: 1.5;">
+            うだるような暑さを吹き飛ばす、冷たい美味しさが今年は5種類パワーアップ！
+          </p>
+        </div>
+      </div>
+
+      <!-- イベント2: MONIN クラフトソーダ -->
+      <div class="event-card" onclick="openEventLink()">
+        <div class="event-img" style="background-image: url('monan_craftsoda.jpg');"></div>
+        <div class="event-detail">
+          <h3 style="font-size: 15px; color: #111;">香るMONIN クラフトソーダ</h3>
+          <p style="margin-top: 8px; font-size: 12px; color: #555; line-height: 1.5; font-weight: bold; color: #d4af37;">
+            フルーツの香りが広がるご褒美チルソーダ。
+          </p>
+          <p style="margin-top: 4px; font-size: 12px; color: #666; line-height: 1.5;">
+            ストロベリー、柚子ジンジャー、マンゴーオレンジ。
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- クーポン画面 -->
+  <div id="coupon-page" class="page">
+    <div class="page-header">
+      <h2>ご利用可能クーポン</h2>
+    </div>
+    <div class="page-content">
+      <div class="coupon-container">
+        <div class="coupon-card">
+          <div class="coupon-body">
+            <div class="coupon-title">【ウエルカム特典】休憩500円OFFクーポン</div>
+            <div class="coupon-desc">全日の休憩ご利用時に500円引きいたします。他の割引券との併用はできません。</div>
+          </div>
+          <div class="coupon-footer">
+            <span style="font-size: 11px; color: #999;">有効期限: 2026年9月30日まで</span>
+            <button class="use-btn" onclick="alert('クーポンを使用しました')">使用する</button>
+          </div>
+        </div>
+        <div class="coupon-card" style="border-left-color: #718096;">
+          <div class="coupon-body">
+            <div class="coupon-title">【ランクアップ記念】限定ドリンク1杯無料</div>
+            <div class="coupon-desc">お部屋の端末、またはフロントにてご注文の際にご提示ください。お好きなドリンクをサービス。</div>
+          </div>
+          <div class="coupon-footer">
+            <span style="font-size: 11px; color: #999;">有効期限: ご利用当日限り</span>
+            <button class="use-btn" onclick="alert('クーポンを使用しました')">使用する</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 下部メニューバー -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchPage('home-page')">ホーム</div>
+    <div class="nav-item" onclick="switchPage('card-page')">会員証</div>
+    <div class="nav-item" onclick="switchPage('event-page')">イベント</div>
+    <div class="nav-item" onclick="switchPage('coupon-page')">クーポン</div>
+  </nav>
+
+  <!-- スクリプト処理 -->
+  <script>
+    let currentPoints = 0;
+    let currentRank = 'bronze';
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error:', err));
+    }
+
+    // イベントカードクリック時のリンク処理
+    function openEventLink() {
+      window.open('https://www.hotel-fine.co.jp/food-drink/upfile/hiyashimen.jpg', '_blank', 'noopener,noreferrer');
+    }
+
+    function switchPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+        page.style.display = 'none';
+      });
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+      const targetPage = document.getElementById(pageId);
+      if (targetPage) {
+        targetPage.classList.add('active');
+        targetPage.style.display = 'flex';
       }
 
-      // 2. セレクトボックスが切り替わった時の処理
-      storeSelect.addEventListener("change", (event) => {
-        const selectedValue = event.target.value;
+      const clickedNav = Array.from(document.querySelectorAll('.nav-item')).find(item => item.getAttribute('onclick').includes(pageId));
+      if (clickedNav) clickedNav.classList.add('active');
+    }
 
-        if (selectedValue) {
-          // 画面の表示を更新して保存
-          storeNameDisplay.textContent = selectedValue;
-          localStorage.setItem("myFavoriteStore", selectedValue);
-        } else {
-          // 未選択に戻された場合
-          storeNameDisplay.textContent = "未設定";
-          localStorage.removeItem("myFavoriteStore");
-        }
+    function addPoint(type) {
+      let pointsToAdd = 0;
+      if (currentRank === 'bronze') {
+        pointsToAdd = 1;
+      } else {
+        pointsToAdd = (type === 'stay') ? 2 : 1;
+      }
+
+      currentPoints += pointsToAdd;
+      document.getElementById('current-pts').innerText = currentPoints;
+
+      let newRank = 'bronze';
+      if (currentPoints >= 30) {
+        newRank = 'platinum';
+      } else if (currentPoints >= 15) {
+        newRank = 'gold';
+      } else if (currentPoints >= 5) {
+        newRank = 'silver';
+      }
+
+      if (newRank !== currentRank) {
+        currentRank = newRank;
+        updateCardUI();
+      }
+    }
+
+    function updateCardUI() {
+      const card = document.getElementById('member-card-element');
+      const homeCard = document.getElementById('home-card-element');
+      
+      const cardList = [card, homeCard];
+      cardList.forEach(c => {
+        if(c) c.classList.remove('card-bronze', 'card-silver', 'card-gold', 'card-platinum');
       });
-    });
+      
+      let className = 'card-bronze';
+
+      if (currentRank === 'silver') {
+        className = 'card-silver';
+      } else if (currentRank === 'gold') {
+        className = 'card-gold';
+      } else if (currentRank === 'platinum') {
+        className = 'card-platinum';
+      }
+
+      cardList.forEach(c => { if(c) c.classList.add(className); });
+    }
   </script>
 
 </body>
